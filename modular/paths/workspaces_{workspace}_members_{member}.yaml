@@ -1,0 +1,49 @@
+get:
+  tags:
+    - Workspaces
+  description: |-
+    Returns the workspace membership, which includes
+    a `User` object for the member and a `Workspace` object
+    for the requested workspace.
+  summary: Get user membership for a workspace
+  responses:
+    '200':
+      description: The user that is part of a workspace.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/workspace_membership.yaml
+    '401':
+      description: The request wasn't authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        A workspace cannot be found, or a user cannot be found, or the user is
+        not a a member of the workspace.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - account
+    - basic: []
+    - api_key: []
+parameters:
+  - name: member
+    in: path
+    description: Member's UUID or Atlassian ID.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

@@ -1,0 +1,178 @@
+get:
+  tags:
+    - Commits
+  description: >-
+    Produces a response in JSON format with a record for every path
+
+    modified, including information on the type of the change and the
+
+    number of lines added and removed.
+
+
+    #### Single commit spec
+
+
+    If the `spec` argument to this API is a single commit, the diff is
+
+    produced against the first parent of the specified commit.
+
+
+    #### Two commit spec
+
+
+    Two commits separated by `..` may be provided as the `spec`, e.g.,
+
+    `3a8b42..9ff173`. When two commits are provided and the `topic` query
+
+    parameter is true or absent, this API produces a 2-way three dot diff.
+
+    This is the diff between source commit and the merge base of the source
+
+    commit and the destination commit. When the `topic` query param is false,
+
+    a simple git-style diff is produced.
+
+
+    The two commits are interpreted as follows:
+
+
+    * First commit: the commit containing the changes we wish to preview
+
+    * Second commit: the commit representing the state to which we want to
+      compare the first commit
+    * **Note**: This is the opposite of the order used in `git diff`.
+
+
+    #### Sample output
+
+    ```
+
+    curl
+    https://api.bitbucket.org/2.0/repositories/bitbucket/geordi/diffstat/d222fa2..e174964
+
+    {
+        "pagelen": 500,
+        "values": [
+            {
+                "type": "diffstat",
+                "status": "modified",
+                "lines_removed": 1,
+                "lines_added": 2,
+                "old": {
+                    "path": "setup.py",
+                    "escaped_path": "setup.py",
+                    "type": "commit_file",
+                    "links": {
+                        "self": {
+                            "href": "https://api.bitbucket.org/2.0/repositories/bitbucket/geordi/src/e1749643d655d7c7014001a6c0f58abaf42ad850/setup.py"
+                        }
+                    }
+                },
+                "new": {
+                    "path": "setup.py",
+                    "escaped_path": "setup.py",
+                    "type": "commit_file",
+                    "links": {
+                        "self": {
+                            "href": "https://api.bitbucket.org/2.0/repositories/bitbucket/geordi/src/d222fa235229c55dad20b190b0b571adf737d5a6/setup.py"
+                        }
+                    }
+                }
+            }
+        ],
+        "page": 1,
+        "size": 1
+    }
+
+    ```
+  summary: Compare two commit diff stats
+  responses:
+    '200':
+      description: The diff stats
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_diffstats.yaml
+    '555':
+      description: If generating the diffstat timed out.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: ignore_whitespace
+    in: query
+    description: Generate diffs that ignore whitespace
+    required: false
+    schema:
+      type: boolean
+  - name: merge
+    in: query
+    description: |-
+      This parameter is deprecated and will be removed at the end
+      of 2022. The 'topic' parameter should be used instead. The
+      'merge' and 'topic' parameters cannot be both used at the same
+      time.
+
+      If true, the source commit is merged into the
+      destination commit, and then a diffstat from the
+      destination to the merge result is returned. If false,
+      a simple 'two dot' diffstat between the source and
+      destination is returned. True if omitted.
+    required: false
+    schema:
+      type: boolean
+  - name: path
+    in: query
+    description: |-
+      Limit the diffstat to a particular file (this parameter
+      can be repeated for multiple paths).
+    required: false
+    schema:
+      type: string
+  - name: renames
+    in: query
+    description: Whether to perform rename detection, true if omitted.
+    required: false
+    schema:
+      type: boolean
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: spec
+    in: path
+    description: |
+      A commit SHA (e.g. `3a8b42`) or a commit range using double dot
+      notation (e.g. `3a8b42..9ff173`).
+    required: true
+    schema:
+      type: string
+  - name: topic
+    in: query
+    description: |-
+      If true, returns 2-way 'three-dot' diff.
+      This is a diff between the source commit and the merge base
+      of the source commit and the destination commit.
+      If false, a simple 'two dot' diff between the source and
+      destination is returned.
+    required: false
+    schema:
+      type: boolean
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

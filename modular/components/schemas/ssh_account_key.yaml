@@ -1,0 +1,9 @@
+allOf:
+  - $ref: ./ssh_key.yaml
+  - type: object
+    title: SSH Account Key
+    description: Represents an SSH public key for a user.
+    properties:
+      owner:
+        $ref: ./account.yaml
+    additionalProperties: true

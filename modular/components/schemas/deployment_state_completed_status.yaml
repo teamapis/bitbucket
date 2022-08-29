@@ -1,0 +1,7 @@
+allOf:
+  - $ref: ./object.yaml
+  - additionalProperties: true
+    type: object
+    title: Completed Deployment
+    description: The status of a completed deployment.
+    properties: {}

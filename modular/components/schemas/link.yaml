@@ -1,0 +1,10 @@
+type: object
+title: Link
+description: A link to a resource related to this object.
+properties:
+  href:
+    type: string
+    format: uri
+  name:
+    type: string
+additionalProperties: false

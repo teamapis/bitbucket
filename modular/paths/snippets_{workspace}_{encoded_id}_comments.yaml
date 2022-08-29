@@ -1,0 +1,97 @@
+get:
+  tags:
+    - Snippets
+  description: |-
+    Used to retrieve a paginated list of all comments for a specific
+    snippet.
+
+    This resource works identical to commit and pull request comments.
+
+    The default sorting is oldest to newest and can be overridden with
+    the `sort` query parameter.
+  summary: List comments on a snippet
+  responses:
+    '200':
+      description: A paginated list of snippet comments, ordered by creation date.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_snippet_comments.yaml
+    '403':
+      description: If the authenticated user does not have access to the snippet.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the snippet does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - snippet
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Snippets
+  description: |-
+    Creates a new comment.
+
+    The only required field in the body is `content.raw`.
+
+    To create a threaded reply to an existing comment, include `parent.id`.
+  summary: Create a comment on a snippet
+  responses:
+    '201':
+      description: The newly created comment.
+      headers:
+        Location:
+          description: The URL of the new comment
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/snippet_comment.yaml
+    '403':
+      description: If the authenticated user does not have access to the snippet.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the snippet does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/snippet_comment.yaml
+    description: The contents of the new comment.
+    required: true
+  security:
+    - oauth2:
+        - snippet
+    - basic: []
+    - api_key: []
+parameters:
+  - name: encoded_id
+    in: path
+    description: The snippet id.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

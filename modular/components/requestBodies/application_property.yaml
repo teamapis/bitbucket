@@ -1,0 +1,6 @@
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/application_property.yaml
+description: The application property to create or update.
+required: true

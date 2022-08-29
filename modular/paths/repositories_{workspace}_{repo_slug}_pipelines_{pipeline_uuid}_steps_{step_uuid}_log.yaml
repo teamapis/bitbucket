@@ -1,0 +1,65 @@
+get:
+  tags:
+    - Pipelines
+  summary: Get log file for a step
+  description: >-
+    Retrieve the log file for a given step of a pipeline.
+
+
+    This endpoint supports (and encourages!) the use of [HTTP Range
+    requests](https://tools.ietf.org/html/rfc7233) to deal with potentially very
+    large log files.
+  operationId: getPipelineStepLogForRepository
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: pipeline_uuid
+      description: The UUID of the pipeline.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: step_uuid
+      description: The UUID of the step.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The raw log file for this pipeline step.
+    '304':
+      description: The log has the same etag as the provided If-None-Match header.
+      content:
+        application/octet-stream:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        A pipeline with the given UUID does not exist, a step with the given
+        UUID does not exist in the pipeline or a log file does not exist for the
+        given step.
+      content:
+        application/octet-stream:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '416':
+      description: >-
+        The requested range does not exist for requests that specified the [HTTP
+        Range header](https://tools.ietf.org/html/rfc7233#section-3.1).
+      content:
+        application/octet-stream:
+          schema:
+            $ref: ../components/schemas/error.yaml

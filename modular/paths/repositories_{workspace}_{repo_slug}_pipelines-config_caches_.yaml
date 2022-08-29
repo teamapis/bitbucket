@@ -1,0 +1,32 @@
+get:
+  tags:
+    - Pipelines
+  summary: List caches
+  description: Retrieve the repository pipelines caches.
+  operationId: getRepositoryPipelineCaches
+  parameters:
+    - name: workspace
+      description: The account.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The list of caches for the given repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_pipeline_caches.yaml
+    '404':
+      description: The account or repository was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

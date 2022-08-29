@@ -1,0 +1,51 @@
+get:
+  tags:
+    - Pipelines
+  summary: >-
+    Get test case reasons (output) for a given test case in a step of a
+    pipeline.
+  operationId: getPipelineTestReportTestCaseReasons
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: pipeline_uuid
+      description: The UUID of the pipeline.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: step_uuid
+      description: The UUID of the step.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: test_case_uuid
+      description: The UUID of the test case.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: Test case reasons (output).
+    '404':
+      description: >-
+        No account, repository, pipeline, step or test case with the UUID
+        provided exists for the pipeline with the UUID provided.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

@@ -1,0 +1,6 @@
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/pipeline_variable.yaml
+description: The updated variable.
+required: true

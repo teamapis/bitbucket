@@ -1,0 +1,97 @@
+get:
+  tags:
+    - Snippets
+  description: >-
+    Identical to
+    [`/snippets`](/cloud/bitbucket/rest/api-group-snippets/#api-snippets-get),
+    except that the result is further filtered
+
+    by the snippet owner and only those that are owned by `{workspace}` are
+
+    returned.
+  summary: List snippets in a workspace
+  responses:
+    '200':
+      description: A paginated list of snippets.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_snippets.yaml
+    '404':
+      description: If the user does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: role
+      in: query
+      description: >-
+        Filter down the result based on the authenticated user's role (`owner`,
+        `contributor`, or `member`).
+      required: false
+      schema:
+        type: string
+        enum:
+          - owner
+          - contributor
+          - member
+  security:
+    - oauth2:
+        - snippet
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Snippets
+  description: >-
+    Identical to
+    [`/snippets`](/cloud/bitbucket/rest/api-group-snippets/#api-snippets-post),
+    except that the new snippet will be
+
+    created under the workspace specified in the path parameter
+
+    `{workspace}`.
+  summary: Create a snippet for a workspace
+  responses:
+    '201':
+      description: The newly created snippet object.
+      headers:
+        Location:
+          description: The URL of the newly created snippet.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/snippet.yaml
+    '401':
+      description: If the request was not authenticated
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: >-
+        If the authenticated user does not have permission to create snippets in
+        the specified workspace.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    $ref: ../components/requestBodies/snippet.yaml
+  security:
+    - oauth2:
+        - snippet:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

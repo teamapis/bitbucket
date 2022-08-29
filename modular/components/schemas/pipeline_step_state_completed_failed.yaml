@@ -1,0 +1,11 @@
+allOf:
+  - $ref: ./pipeline_step_state_completed_result.yaml
+  - additionalProperties: true
+    type: object
+    description: A Bitbucket Pipelines FAILED pipeline step result.
+    properties:
+      name:
+        enum:
+          - FAILED
+        type: string
+        description: The name of the result (FAILED)

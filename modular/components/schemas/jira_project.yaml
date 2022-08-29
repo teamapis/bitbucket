@@ -1,0 +1,17 @@
+allOf:
+  - $ref: ./object.yaml
+  - additionalProperties: true
+    type: object
+    description: A Jira Project.
+x-bb-default-fields:
+  - type
+  - cloudId
+  - id
+x-bb-detail-fields:
+  - key
+  - name
+  - url
+  - avatarUrls.*
+  - site
+x-bb-url: >-
+  /api/{target_user.uuid}/jira/sites/{cloudId}/projects/{id}?atlassian_account_id={user.account_id}

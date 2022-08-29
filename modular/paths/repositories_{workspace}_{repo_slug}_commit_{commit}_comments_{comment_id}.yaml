@@ -1,0 +1,46 @@
+get:
+  tags:
+    - Commits
+  description: Returns the specified commit comment.
+  summary: Get a commit comment
+  responses:
+    '200':
+      description: The commit comment.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/commit_comment.yaml
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: comment_id
+    in: path
+    description: The id of the comment.
+    required: true
+    schema:
+      type: integer
+  - name: commit
+    in: path
+    description: The commit's SHA1.
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

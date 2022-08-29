@@ -1,0 +1,7 @@
+allOf:
+  - $ref: ./pipeline_trigger.yaml
+  - additionalProperties: true
+    type: object
+    title: Pipeline Manual Trigger
+    description: A Bitbucket Pipelines MANUAL trigger.
+    properties: {}

@@ -1,0 +1,151 @@
+get:
+  tags:
+    - Workspaces
+  description: >-
+    Returns an object for the repository permission of each user in the
+
+    requested repository.
+
+
+    Permissions returned are effective permissions: the highest level of
+
+    permission the user has. This does not distinguish between direct and
+
+    indirect (group) privileges.
+
+
+    Only users with admin permission for the repository may access this
+    resource.
+
+
+    Permissions can be:
+
+
+    * `admin`
+
+    * `write`
+
+    * `read`
+
+
+    Example:
+
+
+    ```
+
+    $ curl
+    https://api.bitbucket.org/2.0/workspaces/atlassian_tutorial/permissions/repositories/geordi
+
+
+    {
+      "pagelen": 10,
+      "values": [
+        {
+          "type": "repository_permission",
+          "user": {
+            "type": "user",
+            "display_name": "Erik van Zijst",
+            "uuid": "{d301aafa-d676-4ee0-88be-962be7417567}"
+          },
+          "repository": {
+            "type": "repository",
+            "name": "geordi",
+            "full_name": "atlassian_tutorial/geordi",
+            "uuid": "{85d08b4e-571d-44e9-a507-fa476535aa98}"
+          },
+          "permission": "admin"
+        },
+        {
+          "type": "repository_permission",
+          "user": {
+            "type": "user",
+            "display_name": "Sean Conaty",
+            "uuid": "{504c3b62-8120-4f0c-a7bc-87800b9d6f70}"
+          },
+          "repository": {
+            "type": "repository",
+            "name": "geordi",
+            "full_name": "atlassian_tutorial/geordi",
+            "uuid": "{85d08b4e-571d-44e9-a507-fa476535aa98}"
+          },
+          "permission": "write"
+        }
+      ],
+      "page": 1,
+      "size": 2
+    }
+
+    ```
+
+
+    Results may be further [filtered or
+    sorted](/cloud/bitbucket/rest/intro/#filtering)
+
+    by user, or permission by adding the following query string parameters:
+
+
+    * `q=permission>"read"`
+
+    * `sort=user.display_name`
+
+
+    Note that the query parameter values need to be URL escaped so that `=`
+
+    would become `%3D`.
+  summary: List a repository permissions for a workspace
+  responses:
+    '200':
+      description: The repository permission for all users in this repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_repository_permissions.yaml
+    '403':
+      description: The requesting user isn't an admin of the repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: q
+      in: query
+      description: |-
+
+        Query string to narrow down the response as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: >
+
+        Name of a response property sort the result by as per
+
+        [filtering and
+        sorting](/cloud/bitbucket/rest/intro/#sorting-query-results).
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

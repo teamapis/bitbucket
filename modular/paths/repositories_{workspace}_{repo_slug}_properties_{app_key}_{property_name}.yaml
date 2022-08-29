@@ -1,0 +1,120 @@
+put:
+  responses:
+    '204':
+      description: An empty response.
+  operationId: updateRepositoryHostedPropertyValue
+  summary: Update a repository application property
+  description: >-
+    Update an [application property](/cloud/bitbucket/application-properties/)
+    value stored against a repository.
+  parameters:
+    - required: true
+      in: path
+      name: workspace
+      description: >-
+        The repository container; either the workspace slug or the UUID in curly
+        braces.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: repo_slug
+      description: The repository.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: app_key
+      description: The key of the Connect app.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: property_name
+      description: The name of the property.
+      schema:
+        type: string
+  requestBody:
+    $ref: ../components/requestBodies/application_property.yaml
+  tags:
+    - properties
+delete:
+  responses:
+    '204':
+      description: An empty response.
+  operationId: deleteRepositoryHostedPropertyValue
+  summary: Delete a repository application property
+  description: >-
+    Delete an [application property](/cloud/bitbucket/application-properties/)
+    value stored against a repository.
+  parameters:
+    - required: true
+      in: path
+      name: workspace
+      description: >-
+        The repository container; either the workspace slug or the UUID in curly
+        braces.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: repo_slug
+      description: The repository.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: app_key
+      description: The key of the Connect app.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: property_name
+      description: The name of the property.
+      schema:
+        type: string
+  tags:
+    - properties
+get:
+  responses:
+    '200':
+      description: The value of the property.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/application_property.yaml
+  operationId: getRepositoryHostedPropertyValue
+  summary: Get a repository application property
+  description: >-
+    Retrieve an [application property](/cloud/bitbucket/application-properties/)
+    value stored against a repository.
+  parameters:
+    - required: true
+      in: path
+      name: workspace
+      description: >-
+        The repository container; either the workspace slug or the UUID in curly
+        braces.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: repo_slug
+      description: The repository.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: app_key
+      description: The key of the Connect app.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: property_name
+      description: The name of the property.
+      schema:
+        type: string
+  tags:
+    - properties

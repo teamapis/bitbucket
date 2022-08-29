@@ -1,0 +1,131 @@
+delete:
+  tags:
+    - Pullrequests
+  description: Removes a default reviewer from the repository.
+  summary: Remove a user from the default reviewers
+  responses:
+    '204':
+      description: The specified user successfully removed from the default reviewers
+    '403':
+      description: >-
+        If the authenticated user does not have access modify the default
+        reviewers
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the specified user does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Pullrequests
+  description: |-
+    Returns the specified reviewer.
+
+    This can be used to test whether a user is among the repository's
+    default reviewers list. A 404 indicates that that specified user is not
+    a default reviewer.
+  summary: Get a default reviewer
+  responses:
+    '200':
+      description: The specified user is a default reviewer
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml
+    '403':
+      description: >-
+        If the authenticated user does not have access to check if the specified
+        user is a default reviewer
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the specified user does not exist or is not a default reviewer
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - pullrequest
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Pullrequests
+  description: |-
+    Adds the specified user to the repository's list of default
+    reviewers.
+
+    This method is idempotent. Adding a user a second time has no effect.
+  summary: Add a user to the default reviewers
+  responses:
+    '200':
+      description: The specified user was successfully added to the default reviewers
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml
+    '400':
+      description: >-
+        If the authenticated user tried to add a team, bot user, or user without
+        access to the repository to the default reviewers
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: >-
+        If the authenticated user does not have permission to modify the default
+        reviewers
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the specified user does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: target_username
+    in: path
+    description: |
+      This can either be the username or the UUID of the default reviewer,
+      surrounded by curly-braces, for example: `{account UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

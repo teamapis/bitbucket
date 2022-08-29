@@ -1,0 +1,100 @@
+get:
+  tags:
+    - Pipelines
+  summary: Get variable for a workspace
+  description: Retrieve a workspace level variable.
+  operationId: getPipelineVariableForWorkspace
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: variable_uuid
+      description: The UUID of the variable to retrieve.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The variable.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_variable.yaml
+    '404':
+      description: The workspace or variable with the given UUID was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+put:
+  tags:
+    - Pipelines
+  summary: Update variable for a workspace
+  description: Update a workspace level variable.
+  operationId: updatePipelineVariableForWorkspace
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: variable_uuid
+      description: The UUID of the variable.
+      required: true
+      in: path
+      schema:
+        type: string
+  requestBody:
+    $ref: ../components/requestBodies/pipeline_variable.yaml
+  responses:
+    '200':
+      description: The variable was updated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_variable.yaml
+    '404':
+      description: The workspace or the variable was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+delete:
+  tags:
+    - Pipelines
+  summary: Delete a variable for a workspace
+  description: Delete a workspace level variable.
+  operationId: deletePipelineVariableForWorkspace
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: variable_uuid
+      description: The UUID of the variable to delete.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '204':
+      description: The variable was deleted
+    '404':
+      description: The workspace or the variable with the provided UUID does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

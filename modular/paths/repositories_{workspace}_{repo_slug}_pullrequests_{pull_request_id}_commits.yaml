@@ -1,0 +1,57 @@
+get:
+  tags:
+    - Pullrequests
+  description: |-
+    Returns a paginated list of the pull request's commits.
+
+    These are the commits that are being merged into the destination
+    branch when the pull requests gets accepted.
+  summary: List commits on a pull request
+  responses:
+    '200':
+      description: >-
+        A paginated list of commits made on the given pull request, in
+        chronological order. This list will be empty if the source branch no
+        longer exists.
+    '403':
+      description: If the authenticated user does not have access to the pull request.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        If the pull request does not exist or the source branch is from a forked
+        repository which no longer exists.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - pullrequest
+    - basic: []
+    - api_key: []
+parameters:
+  - name: pull_request_id
+    in: path
+    description: The id of the pull request.
+    required: true
+    schema:
+      type: integer
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

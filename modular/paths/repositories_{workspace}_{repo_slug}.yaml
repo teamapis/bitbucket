@@ -1,0 +1,252 @@
+delete:
+  tags:
+    - Repositories
+  description: |-
+    Deletes the repository. This is an irreversible operation.
+
+    This does not affect its forks.
+  summary: Delete a repository
+  responses:
+    '204':
+      description: Indicates successful deletion.
+    '403':
+      description: >-
+        If the caller either does not have admin access to the repository, or
+        the repository is set to read-only.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: redirect_to
+      in: query
+      description: |
+        If a repository has been moved to a new location, use this parameter to
+        show users a friendly message in the Bitbucket UI that the repository
+        has moved to a new location. However, a GET to this endpoint will still
+        return a 404.
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - repository:delete
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Repositories
+  description: Returns the object describing this repository.
+  summary: Get a repository
+  responses:
+    '200':
+      description: The repository object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/repository.yaml
+    '403':
+      description: >-
+        If the repository is private and the authenticated user does not have
+        access to it.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If no repository exists at this location.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Repositories
+  description: >-
+    Creates a new repository.
+
+
+    Note: In order to set the project for the newly created repository,
+
+    pass in either the project key or the project UUID as part of the
+
+    request body as shown in the examples below:
+
+
+    ```
+
+    $ curl -X POST -H "Content-Type: application/json" -d '{
+        "scm": "git",
+        "project": {
+            "key": "MARS"
+        }
+    }' https://api.bitbucket.org/2.0/repositories/teamsinspace/hablanding
+
+    ```
+
+
+    or
+
+
+    ```
+
+    $ curl -X POST -H "Content-Type: application/json" -d '{
+        "scm": "git",
+        "project": {
+            "key": "{ba516952-992a-4c2d-acbd-17d502922f96}"
+        }
+    }' https://api.bitbucket.org/2.0/repositories/teamsinspace/hablanding
+
+    ```
+
+
+    The project must be assigned for all repositories. If the project is not
+    provided,
+
+    the repository is automatically assigned to the oldest project in the
+    workspace.
+
+
+    Note: In the examples above, the workspace ID `teamsinspace`,
+
+    and/or the repository name `hablanding` can be replaced by UUIDs.
+  summary: Create a repository
+  responses:
+    '200':
+      description: The newly created repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/repository.yaml
+    '400':
+      description: >-
+        If the input document was invalid, or if the caller lacks the privilege
+        to create repositories under the targeted account.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '401':
+      description: If the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/repository.yaml
+    description: >-
+      The repository that is to be created. Note that most object elements are
+      optional. Elements "owner" and "full_name" are ignored as the URL implies
+      them.
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Repositories
+  description: |-
+    Since this endpoint can be used to both update and to create a
+    repository, the request body depends on the intent.
+
+    #### Creation
+
+    See the POST documentation for the repository endpoint for an example
+    of the request body.
+
+    #### Update
+
+    Note: Changing the `name` of the repository will cause the location to
+    be changed. This is because the URL of the repo is derived from the
+    name (a process called slugification). In such a scenario, it is
+    possible for the request to fail if the newly created slug conflicts
+    with an existing repository's slug. But if there is no conflict,
+    the new location will be returned in the `Location` header of the
+    response.
+  summary: Update a repository
+  responses:
+    '200':
+      description: The existing repository has been updated
+      headers:
+        Location:
+          description: |-
+            The location of the repository. This header is only
+            provided when the repository's name is changed.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/repository.yaml
+    '201':
+      description: A new repository has been created
+      headers:
+        Location:
+          description: The location of the newly created repository
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/repository.yaml
+    '400':
+      description: >-
+        If the input document was invalid, or if the caller lacks the privilege
+        to create repositories under the targeted account.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '401':
+      description: If the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/repository.yaml
+    description: |
+      The repository that is to be updated.
+
+      Note that the elements "owner" and "full_name" are ignored since the
+      URL implies them.
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

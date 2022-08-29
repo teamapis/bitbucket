@@ -1,0 +1,11 @@
+allOf:
+  - $ref: ./pipeline_step_state_completed_result.yaml
+  - additionalProperties: true
+    type: object
+    description: A Bitbucket Pipelines NOT_RUN pipeline step result.
+    properties:
+      name:
+        enum:
+          - NOT_RUN
+        type: string
+        description: The name of the result (NOT_RUN)

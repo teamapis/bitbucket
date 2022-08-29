@@ -1,0 +1,105 @@
+delete:
+  tags:
+    - Issue tracker
+  description: Deletes the specified comment.
+  summary: Delete a comment on an issue
+  responses:
+    '204':
+      description: Indicates successful deletion.
+  security:
+    - oauth2:
+        - issue:write
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Issue tracker
+  description: Returns the specified issue comment object.
+  summary: Get a comment on an issue
+  responses:
+    '200':
+      description: The issue comment.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/issue_comment.yaml
+  security:
+    - oauth2:
+        - issue
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Issue tracker
+  description: >-
+    Updates the content of the specified issue comment. Note that only
+
+    the `content.raw` field can be modified.
+
+
+    ```
+
+    $ curl
+    https://api.bitbucket.org/2.0/repositories/atlassian/prlinks/issues/42/comments/5728901
+    \
+      -X PUT -u evzijst \
+      -H 'Content-Type: application/json' \
+      -d '{"content": {"raw": "Lorem ipsum."}'
+    ```
+  summary: Update a comment on an issue
+  responses:
+    '200':
+      description: The updated issue comment.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/issue_comment.yaml
+    '400':
+      description: >-
+        If the input was invalid, or if the update to the comment is detected as
+        spam 
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/issue_comment.yaml
+    description: The updated comment.
+    required: true
+  security:
+    - oauth2:
+        - issue:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: comment_id
+    in: path
+    description: The id of the comment.
+    required: true
+    schema:
+      type: integer
+  - name: issue_id
+    in: path
+    description: The issue id
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

@@ -1,0 +1,22 @@
+allOf:
+  - $ref: ./pipeline_target.yaml
+  - additionalProperties: true
+    type: object
+    title: Pipeline Ref Target
+    description: A Bitbucket Pipelines reference target.
+    properties:
+      ref_type:
+        enum:
+          - branch
+          - tag
+          - named_branch
+          - bookmark
+        type: string
+        description: The type of reference (branch/tag).
+      ref_name:
+        type: string
+        description: The name of the reference.
+      commit:
+        $ref: ./commit.yaml
+      selector:
+        $ref: ./pipeline_selector.yaml

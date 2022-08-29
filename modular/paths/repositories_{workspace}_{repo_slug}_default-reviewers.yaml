@@ -1,0 +1,46 @@
+get:
+  tags:
+    - Pullrequests
+  description: |-
+    Returns the repository's default reviewers.
+
+    These are the users that are automatically added as reviewers on every
+    new pull request that is created.
+  summary: List default reviewers
+  responses:
+    '200':
+      description: The paginated list of default reviewers
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_accounts.yaml
+    '403':
+      description: >-
+        If the authenticated user does not have access to view the default
+        reviewers
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - pullrequest
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

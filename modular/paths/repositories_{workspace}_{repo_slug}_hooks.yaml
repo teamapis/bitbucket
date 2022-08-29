@@ -1,0 +1,112 @@
+get:
+  tags:
+    - Repositories
+    - Webhooks
+  description: Returns a paginated list of webhooks installed on this repository.
+  summary: List webhooks for a repository
+  responses:
+    '200':
+      description: The paginated list of installed webhooks.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_webhook_subscriptions.yaml
+    '403':
+      description: >-
+        If the authenticated user does not have permission to access the
+        webhooks.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - webhook
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Repositories
+    - Webhooks
+  description: |-
+    Creates a new webhook on the specified repository.
+
+    Example:
+
+    ```
+    $ curl -X POST -u credentials -H 'Content-Type: application/json'
+      https://api.bitbucket.org/2.0/repositories/my-workspace/my-repo-slug/hooks
+      -d '
+        {
+          "description": "Webhook Description",
+          "url": "https://example.com/",
+          "active": true,
+          "events": [
+            "repo:push",
+            "issue:created",
+            "issue:updated"
+          ]
+        }'
+    ```
+
+    Note that this call requires the webhook scope, as well as any scope
+    that applies to the events that the webhook subscribes to. In the
+    example above that means: `webhook`, `repository` and `issue`.
+
+    Also note that the `url` must properly resolve and cannot be an
+    internal, non-routed address.
+  summary: Create a webhook for a repository
+  responses:
+    '201':
+      description: If the webhook was registered successfully.
+      headers:
+        Location:
+          description: The URL of new newly created webhook.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/webhook_subscription.yaml
+    '403':
+      description: >-
+        If the authenticated user does not have permission to install webhooks
+        on the specified repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - webhook
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

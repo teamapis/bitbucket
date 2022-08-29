@@ -1,0 +1,103 @@
+get:
+  tags:
+    - Repositories
+  description: >-
+    Returns a paginated list of all repositories owned by the specified
+
+    workspace.
+
+
+    The result can be narrowed down based on the authenticated user's role.
+
+
+    E.g. with `?role=contributor`, only those repositories that the
+
+    authenticated user has write access to are returned (this includes any
+
+    repo the user is an admin on, as that implies write access).
+
+
+    This endpoint also supports filtering and sorting of the results. See
+
+    [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering) for more
+    details.
+  summary: List repositories in a workspace
+  responses:
+    '200':
+      description: The repositories owned by the specified account.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_repositories.yaml
+    '404':
+      description: If the specified account does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '410':
+      description: If the specified account marked as spam.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: role
+      in: query
+      description: >
+
+        Filters the result based on the authenticated user's role on each
+        repository.
+
+
+        * **member**: returns repositories to which the user has explicit read
+        access
+
+        * **contributor**: returns repositories to which the user has explicit
+        write access
+
+        * **admin**: returns repositories to which the user has explicit
+        administrator access
+
+        * **owner**: returns all repositories owned by the current user
+      required: false
+      schema:
+        type: string
+        enum:
+          - admin
+          - contributor
+          - member
+          - owner
+    - name: q
+      in: query
+      description: >
+
+        Query string to narrow down the response as per [filtering and
+        sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: >-
+
+        Field by which the results should be sorted as per [filtering and
+        sorting](/cloud/bitbucket/rest/intro/#filtering).
+                
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

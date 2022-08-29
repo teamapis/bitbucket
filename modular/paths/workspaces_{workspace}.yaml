@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Workspaces
+  description: Returns the requested workspace.
+  summary: Get a workspace
+  responses:
+    '200':
+      description: The workspace.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/workspace.yaml
+    '404':
+      description: If no workspace exists for the specified name or UUID.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+parameters:
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

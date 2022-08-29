@@ -1,0 +1,81 @@
+delete:
+  tags:
+    - Commits
+  description: |-
+    Redact the authenticated user's approval of the specified commit.
+
+    This operation is only available to users that have explicit access to
+    the repository. In contrast, just the fact that a repository is
+    publicly accessible to users does not give them the ability to approve
+    commits.
+  summary: Unapprove a commit
+  responses:
+    '204':
+      description: >-
+        An empty response indicating the authenticated user's approval has been
+        withdrawn.
+    '404':
+      description: If the specified commit, or the repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:write
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Commits
+  description: |-
+    Approve the specified commit as the authenticated user.
+
+    This operation is only available to users that have explicit access to
+    the repository. In contrast, just the fact that a repository is
+    publicly accessible to users does not give them the ability to approve
+    commits.
+  summary: Approve a commit
+  responses:
+    '200':
+      description: >-
+        The `participant` object recording that the authenticated user approved
+        the commit.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/participant.yaml
+    '404':
+      description: If the specified commit, or the repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: commit
+    in: path
+    description: The commit's SHA1.
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

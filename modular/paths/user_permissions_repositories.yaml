@@ -1,0 +1,112 @@
+get:
+  tags:
+    - Repositories
+  description: >-
+    Returns an object for each repository the caller has explicit access
+
+    to and their effective permission — the highest level of permission the
+
+    caller has. This does not return public repositories that the user was
+
+    not granted any specific permission in, and does not distinguish between
+
+    explicit and implicit privileges.
+
+
+    Permissions can be:
+
+
+    * `admin`
+
+    * `write`
+
+    * `read`
+
+
+    Example:
+
+
+    ```
+
+    $ curl https://api.bitbucket.org/2.0/user/permissions/repositories
+
+
+    {
+      "pagelen": 10,
+      "values": [
+        {
+          "type": "repository_permission",
+          "user": {
+            "type": "user",
+            "nickname": "evzijst",
+            "display_name": "Erik van Zijst",
+            "uuid": "{d301aafa-d676-4ee0-88be-962be7417567}"
+          },
+          "repository": {
+            "type": "repository",
+            "name": "geordi",
+            "full_name": "bitbucket/geordi",
+            "uuid": "{85d08b4e-571d-44e9-a507-fa476535aa98}"
+          },
+          "permission": "admin"
+        }
+      ],
+      "page": 1,
+      "size": 1
+    }
+
+    ```
+
+
+    Results may be further [filtered or
+    sorted](/cloud/bitbucket/rest/intro/#filtering) by
+
+    repository or permission by adding the following query string
+
+    parameters:
+
+
+    * `q=repository.name="geordi"` or `q=permission>"read"`
+
+    * `sort=repository.name`
+
+
+    Note that the query parameter values need to be URL escaped so that `=`
+
+    would become `%3D`.
+  summary: List repository permissions for a user
+  responses:
+    '200':
+      description: >-
+        Repository permissions for the repositories a caller has explicit access
+        to.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_repository_permissions.yaml
+  parameters:
+    - name: q
+      in: query
+      description: |-
+
+        Query string to narrow down the response as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: |-
+
+        Name of a response property sort the result by as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - account
+        - repository
+    - basic: []
+    - api_key: []
+parameters: []

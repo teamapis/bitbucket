@@ -1,0 +1,162 @@
+get:
+  tags:
+    - Deployments
+  description: |-
+    Returns all deploy-keys belonging to a repository.
+
+    Example:
+    ```
+    $ curl -H "Authorization <auth header>" \
+    https://api.bitbucket.org/2.0/repositories/mleu/test/deploy-keys
+
+    Output:
+    {
+        "pagelen": 10,
+        "values": [
+            {
+                "id": 123,
+                "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAK/b1cHHDr/TEV1JGQl+WjCwStKG6Bhrv0rFpEsYlyTBm1fzN0VOJJYn4ZOPCPJwqse6fGbXntEs+BbXiptR+++HycVgl65TMR0b5ul5AgwrVdZdT7qjCOCgaSV74/9xlHDK8oqgGnfA7ZoBBU+qpVyaloSjBdJfLtPY/xqj4yHnXKYzrtn/uFc4Kp9Tb7PUg9Io3qohSTGJGVHnsVblq/rToJG7L5xIo0OxK0SJSQ5vuId93ZuFZrCNMXj8JDHZeSEtjJzpRCBEXHxpOPhAcbm4MzULgkFHhAVgp4JbkrT99/wpvZ7r9AdkTg7HGqL3rlaDrEcWfL7Lu6TnhBdq5",
+                "label": "mykey",
+                "type": "deploy_key",
+                "created_on": "2018-08-15T23:50:59.993890+00:00",
+                "repository": {
+                    "full_name": "mleu/test",
+                    "name": "test",
+                    "type": "repository",
+                    "uuid": "{85d08b4e-571d-44e9-a507-fa476535aa98}"
+                },
+                "links":{
+                    "self":{
+                        "href": "https://api.bitbucket.org/2.0/repositories/mleu/test/deploy-keys/123"
+                    }
+                }
+                "last_used": null,
+                "comment": "mleu@C02W454JHTD8"
+            }
+        ],
+        "page": 1,
+        "size": 1
+    }
+    ```
+  summary: List deploy keys
+  responses:
+    '200':
+      description: Deploy keys matching the repository
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_deploy_keys.yaml
+    '403':
+      description: >-
+        If the specified user or repository is not accessible to the current
+        user
+    '404':
+      description: If the specified user or repository does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository
+        - repository:admin
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Deployments
+  description: >-
+    Create a new deploy key in a repository. Note: If authenticating a deploy
+    key
+
+    with an OAuth consumer, any changes to the OAuth consumer will subsequently
+
+    invalidate the deploy key.
+
+
+
+    Example:
+
+    ```
+
+    $ curl -XPOST \
+
+    -H "Authorization <auth header>" \
+
+    -H "Content-type: application/json" \
+
+    https://api.bitbucket.org/2.0/repositories/mleu/test/deploy-keys -d \
+
+    '{
+        "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAK/b1cHHDr/TEV1JGQl+WjCwStKG6Bhrv0rFpEsYlyTBm1fzN0VOJJYn4ZOPCPJwqse6fGbXntEs+BbXiptR+++HycVgl65TMR0b5ul5AgwrVdZdT7qjCOCgaSV74/9xlHDK8oqgGnfA7ZoBBU+qpVyaloSjBdJfLtPY/xqj4yHnXKYzrtn/uFc4Kp9Tb7PUg9Io3qohSTGJGVHnsVblq/rToJG7L5xIo0OxK0SJSQ5vuId93ZuFZrCNMXj8JDHZeSEtjJzpRCBEXHxpOPhAcbm4MzULgkFHhAVgp4JbkrT99/wpvZ7r9AdkTg7HGqL3rlaDrEcWfL7Lu6TnhBdq5 mleu@C02W454JHTD8",
+        "label": "mydeploykey"
+    }'
+
+
+    Output:
+
+    {
+        "id": 123,
+        "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDAK/b1cHHDr/TEV1JGQl+WjCwStKG6Bhrv0rFpEsYlyTBm1fzN0VOJJYn4ZOPCPJwqse6fGbXntEs+BbXiptR+++HycVgl65TMR0b5ul5AgwrVdZdT7qjCOCgaSV74/9xlHDK8oqgGnfA7ZoBBU+qpVyaloSjBdJfLtPY/xqj4yHnXKYzrtn/uFc4Kp9Tb7PUg9Io3qohSTGJGVHnsVblq/rToJG7L5xIo0OxK0SJSQ5vuId93ZuFZrCNMXj8JDHZeSEtjJzpRCBEXHxpOPhAcbm4MzULgkFHhAVgp4JbkrT99/wpvZ7r9AdkTg7HGqL3rlaDrEcWfL7Lu6TnhBdq5",
+        "label": "mydeploykey",
+        "type": "deploy_key",
+        "created_on": "2018-08-15T23:50:59.993890+00:00",
+        "repository": {
+            "full_name": "mleu/test",
+            "name": "test",
+            "type": "repository",
+            "uuid": "{85d08b4e-571d-44e9-a507-fa476535aa98}"
+        },
+        "links":{
+            "self":{
+                "href": "https://api.bitbucket.org/2.0/repositories/mleu/test/deploy-keys/123"
+            }
+        }
+        "last_used": null,
+        "comment": "mleu@C02W454JHTD8"
+    }
+
+    ```
+  summary: Add a deploy key
+  responses:
+    '200':
+      description: The deploy key that was created
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/deploy_key.yaml
+    '400':
+      description: Invalid deploy key inputs
+    '403':
+      description: >-
+        If the specified user or repository is not accessible to the current
+        user
+    '404':
+      description: If the specified user or repository does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository
+        - repository:admin
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

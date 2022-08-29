@@ -1,0 +1,64 @@
+get:
+  tags:
+    - Pullrequests
+  description: >-
+    Returns all pull requests authored by the specified user.
+
+
+    By default only open pull requests are returned. This can be controlled
+
+    using the `state` query parameter. To retrieve pull requests that are
+
+    in one of multiple states, repeat the `state` parameter for each
+
+    individual state.
+
+
+    This endpoint also supports filtering and sorting of the results. See
+
+    [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering) for more
+    details.
+  summary: List pull requests for a user
+  responses:
+    '200':
+      description: All pull requests authored by the specified user.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_pullrequests.yaml
+    '404':
+      description: If the specified user does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: state
+      in: query
+      description: >-
+        Only return pull requests that are in this state. This parameter can be
+        repeated.
+      schema:
+        type: string
+        enum:
+          - OPEN
+          - MERGED
+          - DECLINED
+          - SUPERSEDED
+  security:
+    - oauth2:
+        - pullrequest
+    - basic: []
+    - api_key: []
+parameters:
+  - name: selected_user
+    in: path
+    description: >
+      This can either be the username of the pull request author, the author's
+      UUID
+
+      surrounded by curly-braces, for example: `{account UUID}`, or the author's
+      Atlassian ID.
+    required: true
+    schema:
+      type: string

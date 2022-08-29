@@ -1,0 +1,49 @@
+get:
+  tags:
+    - Users
+  description: >-
+    Gets the public information associated with a user account.
+
+
+    If the user's profile is private, `location`, `website` and
+
+    `created_on` elements are omitted.
+
+
+    Note that the user object returned by this operation is changing
+    significantly, due to privacy changes.
+
+    See the
+    [announcement](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-changes-gdpr/#changes-to-bitbucket-user-objects)
+    for details.
+  summary: Get a user
+  responses:
+    '200':
+      description: The user object
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml
+    '404':
+      description: >-
+        If no user exists for the specified UUID, or if the specified account is
+        a team account, not a personal account.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+parameters:
+  - name: selected_user
+    in: path
+    description: >
+      This can either be the UUID of the account, surrounded by curly-braces,
+      for
+
+      example: `{account UUID}`, OR an Atlassian Account ID.
+    required: true
+    schema:
+      type: string

@@ -1,0 +1,73 @@
+get:
+  tags:
+    - Snippets
+  description: |-
+    Returns the diff of the specified commit against its first parent.
+
+    Note that this resource is different in functionality from the `patch`
+    resource.
+
+    The differences between a diff and a patch are:
+
+    * patches have a commit header with the username, message, etc
+    * diffs support the optional `path=foo/bar.py` query param to filter the
+      diff to just that one file diff (not supported for patches)
+    * for a merge, the diff will show the diff between the merge commit and
+      its first parent (identical to how PRs work), while patch returns a
+      response containing separate patches for each commit on the second
+      parent's ancestry, up to the oldest common ancestor (identical to
+      its reachability).
+
+    Note that the character encoding of the contents of the diff is
+    unspecified as Git does not track this, making it hard for
+    Bitbucket to reliably determine this.
+  summary: Get snippet changes between versions
+  responses:
+    '200':
+      description: The raw diff contents.
+    '403':
+      description: If the authenticated user does not have access to the snippet.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the snippet does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: path
+      in: query
+      description: When used, only one the diff of the specified file will be returned.
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - snippet
+    - basic: []
+    - api_key: []
+parameters:
+  - name: encoded_id
+    in: path
+    description: The snippet id.
+    required: true
+    schema:
+      type: string
+  - name: revision
+    in: path
+    description: >-
+      A revspec expression. This can simply be a commit SHA1, a ref name, or a
+      compare expression like `staging..production`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

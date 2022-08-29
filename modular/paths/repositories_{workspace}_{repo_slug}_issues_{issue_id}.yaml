@@ -1,0 +1,161 @@
+delete:
+  tags:
+    - Issue tracker
+  description: |-
+    Deletes the specified issue. This requires write access to the
+    repository.
+  summary: Delete an issue
+  responses:
+    '200':
+      description: The issue object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/issue.yaml
+    '403':
+      description: When the authenticated user isn't authorized to delete the issue.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        The specified repository or issue does not exist or does not have the
+        issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue:write
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Issue tracker
+  description: Returns the specified issue.
+  summary: Get an issue
+  responses:
+    '200':
+      description: The issue object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/issue.yaml
+    '403':
+      description: When the authenticated user isn't authorized to access the issue.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        The specified repository or issue does not exist or does not have the
+        issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '410':
+      description: The specified issue is unavailable.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Issue tracker
+  description: >-
+    Modifies the issue.
+
+
+    ```
+
+    $ curl https://api.bitbucket.org/2.0/repostories/evzijst/dogslow/issues/123
+    \
+      -u evzijst -s -X PUT -H 'Content-Type: application/json' \
+      -d '{
+      "title": "Updated title",
+      "assignee": {
+        "account_id": "5d5355e8c6b9320d9ea5b28d"
+      },
+      "priority": "minor",
+      "version": {
+        "name": "1.0"
+      },
+      "component": null
+    }'
+
+    ```
+
+
+    This example changes the `title`, `assignee`, `priority` and the
+
+    `version`. It also removes the value of the `component` from the issue
+
+    by setting the field to `null`. Any field not present keeps its existing
+
+    value.
+
+
+    Each time an issue is edited in the UI or through the API, an immutable
+
+    change record is created under the `/issues/123/changes` endpoint. It
+
+    also has a comment associated with the change.
+  summary: Update an issue
+  responses:
+    '200':
+      description: The updated issue object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/issue.yaml
+    '403':
+      description: When the authenticated user isn't authorized to access the issue.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        The specified repository or issue does not exist or does not have the
+        issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: issue_id
+    in: path
+    description: The issue id
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

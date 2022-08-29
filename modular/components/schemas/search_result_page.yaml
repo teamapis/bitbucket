@@ -1,0 +1,30 @@
+type: object
+properties:
+  size:
+    type: integer
+    format: int64
+    readOnly: true
+  page:
+    type: integer
+    format: int32
+    readOnly: true
+  pagelen:
+    type: integer
+    format: int32
+    readOnly: true
+  query_substituted:
+    type: boolean
+    readOnly: true
+  next:
+    type: string
+    format: uri
+    readOnly: true
+  previous:
+    type: string
+    format: uri
+    readOnly: true
+  values:
+    type: array
+    readOnly: true
+    items:
+      $ref: ./search_code_search_result.yaml

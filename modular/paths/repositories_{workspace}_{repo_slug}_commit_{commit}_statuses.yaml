@@ -1,0 +1,66 @@
+get:
+  tags:
+    - Commit statuses
+  description: Returns all statuses (e.g. build results) for a specific commit.
+  summary: List commit statuses for a commit
+  responses:
+    '200':
+      description: A paginated list of all commit statuses for this commit.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_commitstatuses.yaml
+    '401':
+      description: If the repository is private and the request was not authenticated.
+    '404':
+      description: If the repository or commit does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: q
+      in: query
+      description: |
+        Query string to narrow down the response as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: |
+        Field by which the results should be sorted as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+        Defaults to `created_on`.
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: commit
+    in: path
+    description: The commit's SHA1.
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

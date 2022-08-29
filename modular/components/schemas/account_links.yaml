@@ -1,0 +1,7 @@
+type: object
+title: Account Links
+description: Links related to an Account.
+properties:
+  avatar:
+    $ref: ./link.yaml
+additionalProperties: true

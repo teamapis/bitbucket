@@ -1,0 +1,24 @@
+get:
+  tags:
+    - Users
+  description: Returns the currently logged in user.
+  summary: Get current user
+  responses:
+    '200':
+      description: The current user.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/account.yaml
+    '401':
+      description: When the request wasn't authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - account
+    - basic: []
+    - api_key: []
+parameters: []

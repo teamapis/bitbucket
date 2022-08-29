@@ -1,0 +1,9 @@
+allOf:
+  - $ref: ./comment.yaml
+  - type: object
+    title: Issue Comment
+    description: A issue comment.
+    properties:
+      issue:
+        $ref: ./issue.yaml
+    additionalProperties: true

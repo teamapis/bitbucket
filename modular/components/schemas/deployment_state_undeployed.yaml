@@ -1,0 +1,15 @@
+allOf:
+  - $ref: ./deployment_state.yaml
+  - additionalProperties: true
+    type: object
+    description: A Bitbucket Deployment UNDEPLOYED deployment state.
+    properties:
+      name:
+        enum:
+          - UNDEPLOYED
+        type: string
+        description: The name of deployment state (UNDEPLOYED).
+      trigger_url:
+        type: string
+        format: uri
+        description: Link to trigger the deployment.

@@ -1,0 +1,70 @@
+get:
+  tags:
+    - Commits
+  description: >-
+    Returns the best common ancestor between two commits, specified in a revspec
+
+    of 2 commits (e.g. 3a8b42..9ff173).
+
+
+    If more than one best common ancestor exists, only one will be returned. It
+    is
+
+    unspecified which will be returned.
+  summary: Get the common ancestor between two commits
+  responses:
+    '200':
+      description: The merge base of the provided spec.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/commit.yaml
+    '401':
+      description: If the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: >-
+        If the authenticated user does not have access to any of the
+        repositories specified.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the repository or ref in the spec does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: revspec
+    in: path
+    description: |
+      A commit range using double dot notation (e.g. `3a8b42..9ff173`).
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

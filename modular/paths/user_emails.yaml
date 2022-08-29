@@ -1,0 +1,20 @@
+get:
+  tags:
+    - Users
+  description: |-
+    Returns all the authenticated user's email addresses. Both
+    confirmed and unconfirmed.
+  summary: List email addresses for current user
+  responses:
+    default:
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - email
+    - basic: []
+    - api_key: []
+parameters: []

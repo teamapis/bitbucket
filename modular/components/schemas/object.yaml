@@ -1,0 +1,79 @@
+type: object
+description: >-
+  Base type for most resource objects. It defines the common `type` element that
+  identifies an object's type. It also identifies the element as Swagger's
+  `discriminator`.
+properties:
+  type:
+    type: string
+required:
+  - type
+additionalProperties: true
+discriminator:
+  propertyName: type
+  mapping:
+    jira_site: ./jira_site.yaml
+    jira_project: ./jira_project.yaml
+    pipelines_ddev_pipeline_step: ./pipelines_ddev_pipeline_step.yaml
+    pipelines_stg_west_pipeline_step: ./pipelines_stg_west_pipeline_step.yaml
+    pipelines_config: ./pipelines_config.yaml
+    pipeline: ./pipeline.yaml
+    pipeline_cache: ./pipeline_cache.yaml
+    pipeline_target: ./pipeline_target.yaml
+    pipeline_selector: ./pipeline_selector.yaml
+    pipeline_trigger: ./pipeline_trigger.yaml
+    pipeline_state: ./pipeline_state.yaml
+    pipeline_state_in_progress_stage: ./pipeline_state_in_progress_stage.yaml
+    pipeline_state_completed_result: ./pipeline_state_completed_result.yaml
+    pipeline_error: ./pipeline_error.yaml
+    pipeline_ssh_public_key: ./pipeline_ssh_public_key.yaml
+    pipeline_known_host: ./pipeline_known_host.yaml
+    pipeline_ssh_key_pair: ./pipeline_ssh_key_pair.yaml
+    pipeline_schedule: ./pipeline_schedule.yaml
+    pipeline_schedule_execution: ./pipeline_schedule_execution.yaml
+    pipeline_build_number: ./pipeline_build_number.yaml
+    pipeline_variable: ./pipeline_variable.yaml
+    pipeline_step: ./pipeline_step.yaml
+    pipeline_step_state: ./pipeline_step_state.yaml
+    pipeline_step_state_completed_result: ./pipeline_step_state_completed_result.yaml
+    pipeline_step_error: ./pipeline_step_error.yaml
+    ddev_report: ./ddev_report.yaml
+    stg_west_report: ./stg_west_report.yaml
+    report: ./report.yaml
+    report_annotation: ./report_annotation.yaml
+    deployments_stg_west_deployment_environment: ./deployments_stg_west_deployment_environment.yaml
+    deployments_stg_west_deployment_environment_lock: ./deployments_stg_west_deployment_environment_lock.yaml
+    deployment_environment: ./deployment_environment.yaml
+    deployment_environment_lock: ./deployment_environment_lock.yaml
+    deployment_release: ./deployment_release.yaml
+    deployment: ./deployment.yaml
+    deployment_state: ./deployment_state.yaml
+    deployment_state_completed_status: ./deployment_state_completed_status.yaml
+    deployment_variable: ./deployment_variable.yaml
+    deployments_ddev_deployment_environment: ./deployments_ddev_deployment_environment.yaml
+    deployments_ddev_deployment_environment_lock: ./deployments_ddev_deployment_environment_lock.yaml
+    account: ./account.yaml
+    project: ./project.yaml
+    issue_attachment: ./issue_attachment.yaml
+    webhook_subscription: ./webhook_subscription.yaml
+    author: ./author.yaml
+    workspace: ./workspace.yaml
+    repository: ./repository.yaml
+    ssh_key: ./ssh_key.yaml
+    group: ./group.yaml
+    comment: ./comment.yaml
+    snippet_comment: ./snippet_comment.yaml
+    deploy_key: ./deploy_key.yaml
+    branching_model_settings: ./branching_model_settings.yaml
+    base_commit: ./base_commit.yaml
+    version: ./version.yaml
+    issue: ./issue.yaml
+    component: ./component.yaml
+    commitstatus: ./commitstatus.yaml
+    pullrequest: ./pullrequest.yaml
+    participant: ./participant.yaml
+    workspace_membership: ./workspace_membership.yaml
+    branching_model: ./branching_model.yaml
+    milestone: ./milestone.yaml
+    branchrestriction: ./branchrestriction.yaml
+    snippet: ./snippet.yaml

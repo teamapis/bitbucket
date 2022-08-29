@@ -1,0 +1,36 @@
+allOf:
+  - $ref: ./object.yaml
+  - additionalProperties: true
+    type: object
+    title: Pipeline
+    description: A Bitbucket Pipeline. This represents an actual pipeline result.
+    properties:
+      uuid:
+        type: string
+        description: The UUID identifying the pipeline.
+      build_number:
+        type: integer
+        description: The build number of the pipeline.
+      creator:
+        $ref: ./account.yaml
+      repository:
+        $ref: ./repository.yaml
+      target:
+        $ref: ./pipeline_target.yaml
+      trigger:
+        $ref: ./pipeline_trigger.yaml
+      state:
+        $ref: ./pipeline_state.yaml
+      created_on:
+        type: string
+        format: date-time
+        description: The timestamp when the pipeline was created.
+      completed_on:
+        type: string
+        format: date-time
+        description: >-
+          The timestamp when the Pipeline was completed. This is not set if the
+          pipeline is still in progress.
+      build_seconds_used:
+        type: integer
+        description: The number of build seconds used by this pipeline.

@@ -1,0 +1,145 @@
+get:
+  tags:
+    - Workspaces
+  description: >-
+    Returns a list of workspaces accessible by the authenticated user.
+
+
+    Example:
+
+
+    ```
+
+    $ curl https://api.bitbucket.org/2.0/workspaces
+
+
+    {
+      "pagelen": 10,
+      "page": 1,
+      "size": 1,
+      "values": [
+        {
+            "uuid": "{a15fb181-db1f-48f7-b41f-e1eff06929d6}",
+            "links": {
+                "owners": {
+                    "href": "https://api.bitbucket.org/2.0/workspaces/bbworkspace1/members?q=permission%3D%22owner%22"
+                },
+                "self": {
+                    "href": "https://api.bitbucket.org/2.0/workspaces/bbworkspace1"
+                },
+                "repositories": {
+                    "href": "https://api.bitbucket.org/2.0/repositories/bbworkspace1"
+                },
+                "snippets": {
+                    "href": "https://api.bitbucket.org/2.0/snippets/bbworkspace1"
+                },
+                "html": {
+                    "href": "https://bitbucket.org/bbworkspace1/"
+                },
+                "avatar": {
+                    "href": "https://bitbucket.org/workspaces/bbworkspace1/avatar/?ts=1543465801"
+                },
+                "members": {
+                    "href": "https://api.bitbucket.org/2.0/workspaces/bbworkspace1/members"
+                },
+                "projects": {
+                    "href": "https://api.bitbucket.org/2.0/workspaces/bbworkspace1/projects"
+                }
+            },
+            "created_on": "2018-11-14T19:15:05.058566+00:00",
+            "type": "workspace",
+            "slug": "bbworkspace1",
+            "is_private": true,
+            "name": "Atlassian Bitbucket"
+        }
+      ]
+    }
+
+    ```
+
+
+    Results may be further [filtered or
+    sorted](/cloud/bitbucket/rest/intro/#filtering) by
+
+    workspace or permission by adding the following query string parameters:
+
+
+    * `q=slug="bbworkspace1"` or `q=is_private=true`
+
+    * `sort=created_on`
+
+
+    Note that the query parameter values need to be URL escaped so that `=`
+
+    would become `%3D`.
+
+
+    **The `collaborator` role is being removed from the Bitbucket Cloud API. For
+    more information,
+
+    see the [deprecation
+    announcement](/cloud/bitbucket/deprecation-notice-collaborator-role/).**
+  summary: List workspaces for user
+  responses:
+    '200':
+      description: The list of workspaces accessible by the authenticated user.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_workspaces.yaml
+    '401':
+      description: The request wasn't authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: role
+      in: query
+      description: |2-
+
+                    Filters the workspaces based on the authenticated user's role on each workspace.
+
+                    * **member**: returns a list of all the workspaces which the caller is a member of
+                        at least one workspace group or repository
+                    * **collaborator**: returns a list of workspaces which the caller has write access
+                        to at least one repository in the workspace
+                    * **owner**: returns a list of workspaces which the caller has administrator access
+                    
+      required: false
+      schema:
+        type: string
+        enum:
+          - owner
+          - collaborator
+          - member
+    - name: q
+      in: query
+      description: >-
+
+        Query string to narrow down the response. See
+
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering) for
+        details.
+      required: false
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: >
+
+        Name of a response property to sort results. See
+
+        [filtering and
+        sorting](/cloud/bitbucket/rest/intro/#sorting-query-results)
+
+        for details.
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - account
+    - basic: []
+    - api_key: []
+parameters: []

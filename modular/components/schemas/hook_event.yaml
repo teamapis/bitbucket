@@ -1,0 +1,43 @@
+type: object
+title: Hook Event
+description: An event, associated with a resource or subject type.
+properties:
+  event:
+    type: string
+    description: The event identifier.
+    enum:
+      - repo:transfer
+      - repo:commit_status_created
+      - issue:updated
+      - repo:commit_comment_created
+      - project:updated
+      - pullrequest:rejected
+      - repo:push
+      - repo:commit_status_updated
+      - repo:fork
+      - pullrequest:comment_deleted
+      - issue:created
+      - issue:comment_created
+      - pullrequest:comment_created
+      - repo:deleted
+      - repo:created
+      - pullrequest:changes_request_created
+      - repo:updated
+      - repo:imported
+      - pullrequest:changes_request_removed
+      - pullrequest:unapproved
+      - pullrequest:created
+      - pullrequest:updated
+      - pullrequest:comment_updated
+      - pullrequest:fulfilled
+      - pullrequest:approved
+  category:
+    type: string
+    description: The category this event belongs to.
+  label:
+    type: string
+    description: Summary of the webhook event type.
+  description:
+    type: string
+    description: More detailed description of the webhook event type.
+additionalProperties: false

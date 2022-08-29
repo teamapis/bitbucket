@@ -1,0 +1,19 @@
+allOf:
+  - $ref: ./object.yaml
+  - type: object
+    title: Account
+    description: An account object.
+    properties:
+      links:
+        $ref: ./account_links.yaml
+      created_on:
+        type: string
+        format: date-time
+      display_name:
+        type: string
+      username:
+        type: string
+        pattern: ^[a-zA-Z0-9_\-]+$
+      uuid:
+        type: string
+    additionalProperties: true

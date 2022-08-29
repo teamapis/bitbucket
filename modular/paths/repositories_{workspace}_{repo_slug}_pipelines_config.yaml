@@ -1,0 +1,61 @@
+get:
+  tags:
+    - Pipelines
+  summary: Get configuration
+  description: Retrieve the repository pipelines configuration.
+  operationId: getRepositoryPipelineConfig
+  parameters:
+    - name: workspace
+      description: The account.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The repository pipelines configuration.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipelines_config.yaml
+put:
+  tags:
+    - Pipelines
+  summary: Update configuration
+  description: Update the pipelines configuration for a repository.
+  operationId: updateRepositoryPipelineConfig
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/pipelines_config.yaml
+    description: The updated repository pipelines configuration.
+    required: true
+  responses:
+    '200':
+      description: The repository pipelines configuration was updated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipelines_config.yaml

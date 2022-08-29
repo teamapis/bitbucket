@@ -1,0 +1,112 @@
+delete:
+  tags:
+    - Issue tracker
+  description: Retract your vote.
+  summary: Remove vote for an issue
+  responses:
+    default:
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - account:write
+        - issue:write
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Issue tracker
+  description: |-
+    Check whether the authenticated user has voted for this issue.
+    A 204 status code indicates that the user has voted, while a 404
+    implies they haven't.
+  summary: Check if current user voted for an issue
+  responses:
+    '204':
+      description: If the authenticated user has not voted for this issue.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '401':
+      description: When the request wasn't authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        If the authenticated user has not voted for this issue, or when the repo
+        does not exist, or does not have an issue tracker.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - account
+        - issue
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Issue tracker
+  description: |-
+    Vote for this issue.
+
+    To cast your vote, do an empty PUT. The 204 status code indicates that
+    the operation was successful.
+  summary: Vote for an issue
+  responses:
+    '204':
+      description: Indicating the authenticated user has cast their vote successfully.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '401':
+      description: When the request wasn't authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        The specified repository or issue does not exist or does not have the
+        issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - account:write
+        - issue
+    - basic: []
+    - api_key: []
+parameters:
+  - name: issue_id
+    in: path
+    description: The issue id
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

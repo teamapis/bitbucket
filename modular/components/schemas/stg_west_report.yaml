@@ -1,0 +1,10 @@
+allOf:
+  - $ref: ./object.yaml
+  - additionalProperties: true
+    type: object
+    description: A report for a commit.
+x-bb-default-fields:
+  - uuid
+  - commitHash
+x-bb-url: >-
+  /rest/2.0/accounts/{target_user.uuid}/repositories/{repository.uuid}/commits/{commitHash}/reports/{uuid}

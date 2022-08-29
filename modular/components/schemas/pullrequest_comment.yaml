@@ -1,0 +1,9 @@
+allOf:
+  - $ref: ./comment.yaml
+  - type: object
+    title: Pull Request Comment
+    description: A pullrequest comment.
+    properties:
+      pullrequest:
+        $ref: ./pullrequest.yaml
+    additionalProperties: true

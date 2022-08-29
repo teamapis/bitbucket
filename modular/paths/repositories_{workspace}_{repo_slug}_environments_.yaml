@@ -1,0 +1,80 @@
+get:
+  tags:
+    - Deployments
+  description: Find environments
+  summary: List environments
+  operationId: getEnvironmentsForRepository
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The matching environments.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_environments.yaml
+post:
+  tags:
+    - Deployments
+  description: Create an environment.
+  summary: Create an environment
+  operationId: createEnvironment
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/deployment_environment.yaml
+    description: The environment to create.
+    required: true
+  responses:
+    '201':
+      description: The environment was created.
+      headers:
+        Location:
+          description: The URL of the newly created environment.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/deployment_environment.yaml
+    '404':
+      description: The account or repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '409':
+      description: An environment host with the provided name already exists.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

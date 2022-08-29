@@ -1,0 +1,150 @@
+get:
+  tags:
+    - Source
+    - Repositories
+  description: >-
+    Returns a paginated list of commits that modified the specified file.
+
+
+    Commits are returned in reverse chronological order. This is roughly
+
+    equivalent to the following commands:
+
+        $ git log --follow --date-order <sha> <path>
+
+    By default, Bitbucket will follow renames and the path name in the
+
+    returned entries reflects that. This can be turned off using the
+
+    `?renames=false` query parameter.
+
+
+    Results are returned in descending chronological order by default, and
+
+    like most endpoints you can
+
+    [filter and sort](/cloud/bitbucket/rest/intro/#filtering) the response to
+
+    only provide exactly the data you want.
+
+
+    For example, if you wanted to find commits made before 2011-05-18
+
+    against a file named `README.rst`, but you only wanted the path and
+
+    date, your query would look like this:
+
+
+    ```
+
+    $ curl
+    'https://api.bitbucket.org/2.0/repositories/evzijst/dogslow/filehistory/master/README.rst'\
+      '?fields=values.next,values.path,values.commit.date&q=commit.date<=2011-05-18'
+    {
+      "values": [
+        {
+          "commit": {
+            "date": "2011-05-17T07:32:09+00:00"
+          },
+          "path": "README.rst"
+        },
+        {
+          "commit": {
+            "date": "2011-05-16T06:33:28+00:00"
+          },
+          "path": "README.txt"
+        },
+        {
+          "commit": {
+            "date": "2011-05-16T06:15:39+00:00"
+          },
+          "path": "README.txt"
+        }
+      ]
+    }
+
+    ```
+
+
+    In the response you can see that the file was renamed to `README.rst`
+
+    by the commit made on 2011-05-16, and was previously named `README.txt`.
+  summary: List commits that modified a file
+  responses:
+    '200':
+      description: A paginated list of commits that modified the specified file
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_files.yaml
+    '404':
+      description: If the repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: renames
+      in: query
+      description: |-
+
+        When `true`, Bitbucket will follow the history of the file across
+        renames (this is the default behavior). This can be turned off by
+        specifying `false`.
+      required: false
+      schema:
+        type: string
+    - name: q
+      in: query
+      description: |-
+
+        Query string to narrow down the response as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: >
+
+        Name of a response property sort the result by as per
+
+        [filtering and
+        sorting](/cloud/bitbucket/rest/intro/#sorting-query-results).
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: commit
+    in: path
+    description: The commit's SHA1.
+    required: true
+    schema:
+      type: string
+  - name: path
+    in: path
+    description: Path to the file.
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

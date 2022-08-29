@@ -1,0 +1,123 @@
+get:
+  tags:
+    - Pipelines
+  summary: Get a schedule
+  description: Retrieve a schedule by its UUID.
+  operationId: getRepositoryPipelineSchedule
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: schedule_uuid
+      description: The uuid of the schedule.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The requested schedule.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_schedule.yaml
+    '404':
+      description: The account, repository or schedule was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+put:
+  tags:
+    - Pipelines
+  summary: Update a schedule
+  description: Update a schedule.
+  operationId: updateRepositoryPipelineSchedule
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: schedule_uuid
+      description: The uuid of the schedule.
+      required: true
+      in: path
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/pipeline_schedule.yaml
+    description: The schedule to update.
+    required: true
+  responses:
+    '200':
+      description: The schedule is updated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_schedule.yaml
+    '404':
+      description: The account, repository or schedule was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+delete:
+  tags:
+    - Pipelines
+  summary: Delete a schedule
+  description: Delete a schedule.
+  operationId: deleteRepositoryPipelineSchedule
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: schedule_uuid
+      description: The uuid of the schedule.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '204':
+      description: The schedule was deleted.
+    '404':
+      description: The account, repository or schedule was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

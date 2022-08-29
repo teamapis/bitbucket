@@ -1,0 +1,223 @@
+delete:
+  tags:
+    - Snippets
+  description: |-
+    Deletes the snippet.
+
+    Note that this only works for versioned URLs that point to the latest
+    commit of the snippet. Pointing to an older commit results in a 405
+    status code.
+
+    To delete a snippet, regardless of whether or not concurrent changes
+    are being made to it, use `DELETE /snippets/{encoded_id}` instead.
+  summary: Delete a previous revision of a snippet
+  responses:
+    '204':
+      description: If the snippet was deleted successfully.
+    '401':
+      description: If the snippet is private and the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: >-
+        If authenticated user does not have permission to delete the private
+        snippet.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the snippet does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '405':
+      description: If `{node_id}` is not the latest revision.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - snippet:write
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Snippets
+  description: |-
+    Identical to `GET /snippets/encoded_id`, except that this endpoint
+    can be used to retrieve the contents of the snippet as it was at an
+    older revision, while `/snippets/encoded_id` always returns the
+    snippet's current revision.
+
+    Note that only the snippet's file contents are versioned, not its
+    meta data properties like the title.
+
+    Other than that, the two endpoints are identical in behavior.
+  summary: Get a previous revision of a snippet
+  responses:
+    '200':
+      description: The snippet object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/snippet.yaml
+        multipart/related:
+          schema:
+            $ref: ../components/schemas/snippet.yaml
+        multipart/form-data:
+          schema:
+            $ref: ../components/schemas/snippet.yaml
+    '401':
+      description: If the snippet is private and the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/related:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/form-data:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: If authenticated user does not have access to the private snippet.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/related:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/form-data:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the snippet, or the revision does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/related:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/form-data:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - snippet
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Snippets
+  description: |-
+    Identical to `UPDATE /snippets/encoded_id`, except that this endpoint
+    takes an explicit commit revision. Only the snippet's "HEAD"/"tip"
+    (most recent) version can be updated and requests on all other,
+    older revisions fail by returning a 405 status.
+
+    Usage of this endpoint over the unrestricted `/snippets/encoded_id`
+    could be desired if the caller wants to be sure no concurrent
+    modifications have taken place between the moment of the UPDATE
+    request and the original GET.
+
+    This can be considered a so-called "Compare And Swap", or CAS
+    operation.
+
+    Other than that, the two endpoints are identical in behavior.
+  summary: Update a previous revision of a snippet
+  responses:
+    '200':
+      description: The updated snippet object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/snippet.yaml
+        multipart/related:
+          schema:
+            $ref: ../components/schemas/snippet.yaml
+        multipart/form-data:
+          schema:
+            $ref: ../components/schemas/snippet.yaml
+    '401':
+      description: If the snippet is private and the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/related:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/form-data:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: >-
+        If authenticated user does not have permission to update the private
+        snippet.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/related:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/form-data:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the snippet or the revision does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/related:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/form-data:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '405':
+      description: If `{node_id}` is not the latest revision.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/related:
+          schema:
+            $ref: ../components/schemas/error.yaml
+        multipart/form-data:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - snippet:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: encoded_id
+    in: path
+    description: The snippet id.
+    required: true
+    schema:
+      type: string
+  - name: node_id
+    in: path
+    description: A commit revision (SHA1).
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

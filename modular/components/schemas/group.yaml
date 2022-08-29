@@ -1,0 +1,49 @@
+allOf:
+  - $ref: ./object.yaml
+  - type: object
+    title: Group
+    description: A group object
+    properties:
+      links:
+        type: object
+        properties:
+          self:
+            type: object
+            title: Link
+            description: A link to a resource related to this object.
+            properties:
+              href:
+                type: string
+                format: uri
+              name:
+                type: string
+            additionalProperties: false
+          html:
+            type: object
+            title: Link
+            description: A link to a resource related to this object.
+            properties:
+              href:
+                type: string
+                format: uri
+              name:
+                type: string
+            additionalProperties: false
+        additionalProperties: false
+      owner:
+        $ref: ./account.yaml
+      workspace:
+        $ref: ./workspace.yaml
+      name:
+        type: string
+      slug:
+        type: string
+        description: |-
+          The "sluggified" version of the group's name. This contains only ASCII
+          characters and can therefore be slightly different than the name
+      full_slug:
+        type: string
+        description: |
+          The concatenation of the workspace's slug and the group's slug,
+          separated with a colon (e.g. `acme:developers`)
+    additionalProperties: true

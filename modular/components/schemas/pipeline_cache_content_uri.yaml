@@ -1,0 +1,8 @@
+type: object
+title: Pipeline Cache Content URI
+description: A representation of the location of pipeline cache content.
+properties:
+  uri:
+    type: string
+    format: uri
+    description: The uri for pipeline cache content.

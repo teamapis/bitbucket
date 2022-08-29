@@ -1,0 +1,98 @@
+get:
+  tags:
+    - Commit statuses
+  description: Returns the specified build status for a commit.
+  summary: Get a build status for a commit
+  responses:
+    '200':
+      description: The build status object with the specified key.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/commitstatus.yaml
+    '401':
+      description: If the repository is private and the request was not authenticated.
+    '404':
+      description: If the repository, commit, or build status key does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Commit statuses
+  description: |-
+    Used to update the current status of a build status object on the
+    specific commit.
+
+    This operation can also be used to change other properties of the
+    build status:
+
+    * `state`
+    * `name`
+    * `description`
+    * `url`
+    * `refname`
+
+    The `key` cannot be changed.
+  summary: Update a build status for a commit
+  responses:
+    '200':
+      description: The updated build status object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/commitstatus.yaml
+    '401':
+      description: If the repository is private and the request was not authenticated.
+    '404':
+      description: If the repository or build does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/commitstatus.yaml
+    description: The updated build status object
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: commit
+    in: path
+    description: The commit's SHA1.
+    required: true
+    schema:
+      type: string
+  - name: key
+    in: path
+    description: The build status' unique key
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

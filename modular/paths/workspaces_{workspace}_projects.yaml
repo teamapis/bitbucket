@@ -1,0 +1,122 @@
+get:
+  tags:
+    - Workspaces
+  description: Returns the list of projects in this workspace.
+  summary: List projects in a workspace
+  responses:
+    '200':
+      description: The list of projects in this workspace.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_projects.yaml
+    '404':
+      description: A workspace doesn't exist at this location.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - project
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Projects
+  description: |-
+    Creates a new project.
+
+    Note that the avatar has to be embedded as either a data-url
+    or a URL to an external image as shown in the examples below:
+
+    ```
+    $ body=$(cat << EOF
+    {
+        "name": "Mars Project",
+        "key": "MARS",
+        "description": "Software for colonizing mars.",
+        "links": {
+            "avatar": {
+                "href": "data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/..."
+            }
+        },
+        "is_private": false
+    }
+    EOF
+    )
+    $ curl -H "Content-Type: application/json" \
+           -X POST \
+           -d "$body" \
+           https://api.bitbucket.org/2.0/teams/teams-in-space/projects/ | jq .
+    {
+      // Serialized project document
+    }
+    ```
+
+    or even:
+
+    ```
+    $ body=$(cat << EOF
+    {
+        "name": "Mars Project",
+        "key": "MARS",
+        "description": "Software for colonizing mars.",
+        "links": {
+            "avatar": {
+                "href": "http://i.imgur.com/72tRx4w.gif"
+            }
+        },
+        "is_private": false
+    }
+    EOF
+    )
+    $ curl -H "Content-Type: application/json" \
+           -X POST \
+           -d "$body" \
+           https://api.bitbucket.org/2.0/teams/teams-in-space/projects/ | jq .
+    {
+      // Serialized project document
+    }
+    ```
+  summary: Create a project in a workspace
+  responses:
+    '201':
+      description: A new project has been created.
+      headers:
+        Location:
+          description: The location of the newly created project
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/project.yaml
+    '403':
+      description: The requesting user isn't authorized to create the project.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: A workspace doesn't exist at this location.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    $ref: ../components/requestBodies/project.yaml
+  security:
+    - oauth2:
+        - project:admin
+    - basic: []
+    - api_key: []
+parameters:
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

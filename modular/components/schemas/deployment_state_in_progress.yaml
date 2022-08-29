@@ -1,0 +1,21 @@
+allOf:
+  - $ref: ./deployment_state.yaml
+  - additionalProperties: true
+    type: object
+    description: A Bitbucket Deployment IN_PROGRESS deployment state.
+    properties:
+      name:
+        enum:
+          - IN_PROGRESS
+        type: string
+        description: The name of deployment state (IN_PROGRESS).
+      url:
+        type: string
+        format: uri
+        description: Link to the deployment result.
+      deployer:
+        $ref: ./account.yaml
+      start_date:
+        type: string
+        format: date-time
+        description: The timestamp when the deployment was started.

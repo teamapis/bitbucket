@@ -1,0 +1,93 @@
+get:
+  tags:
+    - Issue tracker
+  description: |-
+    Returns all attachments for this issue.
+
+    This returns the files' meta data. This does not return the files'
+    actual contents.
+
+    The files are always ordered by their upload date.
+  summary: List attachments for an issue
+  responses:
+    '200':
+      description: A paginated list of all attachments for this issue.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_issue_attachments.yaml
+    '401':
+      description: If the issue tracker is private and the request was not authenticated.
+    '404':
+      description: >-
+        The specified repository or issue does not exist or does not have the
+        issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Issue tracker
+  description: |-
+    Upload new issue attachments.
+
+    To upload files, perform a `multipart/form-data` POST containing one
+    or more file fields.
+
+    When a file is uploaded with the same name as an existing attachment,
+    then the existing file will be replaced.
+  summary: Upload an attachment to an issue
+  responses:
+    '201':
+      description: An empty response document.
+      headers:
+        Location:
+          description: The URL to the issue's collection of attachments.
+          schema:
+            type: string
+    '400':
+      description: If no files were uploaded, or if the wrong `Content-Type` was used.
+    '401':
+      description: If the issue tracker is private and the request was not authenticated.
+    '404':
+      description: >-
+        The specified repository or issue does not exist or does not have the
+        issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: issue_id
+    in: path
+    description: The issue id
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

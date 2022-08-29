@@ -1,0 +1,32 @@
+get:
+  tags:
+    - Workspaces
+  description: Returns all members of the requested workspace.
+  summary: List users in a workspace
+  responses:
+    '200':
+      description: The list of users that are part of a workspace.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_workspace_memberships.yaml
+    '401':
+      description: The request wasn't authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - account
+    - basic: []
+    - api_key: []
+parameters:
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

@@ -1,0 +1,108 @@
+get:
+  tags:
+    - Pullrequests
+  description: |-
+    Returns a paginated list of the pull request's comments.
+
+    This includes both global, inline comments and replies.
+
+    The default sorting is oldest to newest and can be overridden with
+    the `sort` query parameter.
+
+    This endpoint also supports filtering and sorting of the results. See
+    [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering) for more
+    details.
+  summary: List comments on a pull request
+  responses:
+    '200':
+      description: >-
+        A paginated list of comments made on the given pull request, in
+        chronological order.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_pullrequest_comments.yaml
+    '403':
+      description: If the authenticated user does not have access to the pull request.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the pull request does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - pullrequest
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Pullrequests
+  description: |-
+    Creates a new pull request comment.
+
+    Returns the newly created pull request comment.
+  summary: Create a comment on a pull request
+  responses:
+    '201':
+      description: The newly created comment.
+      headers:
+        Location:
+          description: The URL of the new comment
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pullrequest_comment.yaml
+    '403':
+      description: If the authenticated user does not have access to the pull request.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the pull request does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/pullrequest_comment.yaml
+    description: The comment object.
+    required: true
+  security:
+    - oauth2:
+        - pullrequest
+    - basic: []
+    - api_key: []
+parameters:
+  - name: pull_request_id
+    in: path
+    description: The id of the pull request.
+    required: true
+    schema:
+      type: integer
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

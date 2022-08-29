@@ -1,0 +1,26 @@
+allOf:
+  - $ref: ./object.yaml
+  - type: object
+    title: Milestone
+    description: A milestone as defined in a repository's issue tracker.
+    properties:
+      links:
+        type: object
+        properties:
+          self:
+            type: object
+            title: Link
+            description: A link to a resource related to this object.
+            properties:
+              href:
+                type: string
+                format: uri
+              name:
+                type: string
+            additionalProperties: false
+        additionalProperties: false
+      name:
+        type: string
+      id:
+        type: integer
+    additionalProperties: true

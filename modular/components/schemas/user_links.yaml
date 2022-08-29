@@ -1,0 +1,13 @@
+allOf:
+  - $ref: ./account_links.yaml
+  - type: object
+    title: User Links
+    description: Links related to a User.
+    properties:
+      self:
+        $ref: ./link.yaml
+      html:
+        $ref: ./link.yaml
+      repositories:
+        $ref: ./link.yaml
+    additionalProperties: true

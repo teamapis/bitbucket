@@ -1,0 +1,28 @@
+allOf:
+  - $ref: ./object.yaml
+  - type: object
+    title: Workspace Membership
+    description: |-
+      A Bitbucket workspace membership.
+                  Links a user to a workspace.
+    properties:
+      links:
+        type: object
+        properties:
+          self:
+            type: object
+            title: Link
+            description: A link to a resource related to this object.
+            properties:
+              href:
+                type: string
+                format: uri
+              name:
+                type: string
+            additionalProperties: false
+        additionalProperties: false
+      user:
+        $ref: ./account.yaml
+      workspace:
+        $ref: ./workspace.yaml
+    additionalProperties: true

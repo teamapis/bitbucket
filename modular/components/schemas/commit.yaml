@@ -1,0 +1,14 @@
+allOf:
+  - $ref: ./base_commit.yaml
+  - type: object
+    title: Commit
+    description: A repository commit object.
+    properties:
+      repository:
+        $ref: ./repository.yaml
+      participants:
+        type: array
+        items:
+          $ref: ./participant.yaml
+        minItems: 0
+    additionalProperties: true

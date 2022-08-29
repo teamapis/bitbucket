@@ -1,0 +1,27 @@
+allOf:
+  - $ref: ./deployment_state.yaml
+  - additionalProperties: true
+    type: object
+    description: A Bitbucket Deployment COMPLETED deployment state.
+    properties:
+      name:
+        enum:
+          - COMPLETED
+        type: string
+        description: The name of deployment state (COMPLETED).
+      url:
+        type: string
+        format: uri
+        description: Link to the deployment result.
+      deployer:
+        $ref: ./account.yaml
+      status:
+        $ref: ./deployment_state_completed_status.yaml
+      start_date:
+        type: string
+        format: date-time
+        description: The timestamp when the deployment was started.
+      completion_date:
+        type: string
+        format: date-time
+        description: The timestamp when the deployment completed.

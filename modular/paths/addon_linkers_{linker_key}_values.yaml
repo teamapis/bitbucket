@@ -1,0 +1,168 @@
+delete:
+  tags:
+    - Addon
+  description: |-
+    Delete all [linker](/cloud/bitbucket/modules/linker/) values for the
+    specified linker of the authenticated application.
+  summary: Delete all linker values
+  responses:
+    '204':
+      description: Successfully deleted the linker values.
+    '401':
+      description: Authentication must use app JWT
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The linker does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Addon
+  description: >-
+    Gets a list of all [linker](/cloud/bitbucket/modules/linker/) values for the
+
+    specified linker of the authenticated application.
+
+
+    A linker value lets applications supply values to modify its regular
+    expression.
+
+
+    The base regular expression must use a Bitbucket-specific match group `(?K)`
+
+    which will be translated to `([\w\-]+)`. A value must match this pattern.
+
+
+    [Read more about linker
+    values](/cloud/bitbucket/modules/linker/#usingthebitbucketapitosupplyvalues)
+  summary: List linker values for a linker
+  responses:
+    '200':
+      description: Successful.
+    '401':
+      description: Authentication must use app JWT
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The linker does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Addon
+  description: >-
+    Creates a [linker](/cloud/bitbucket/modules/linker/) value for the specified
+
+    linker of authenticated application.
+
+
+    A linker value lets applications supply values to modify its regular
+    expression.
+
+
+    The base regular expression must use a Bitbucket-specific match group `(?K)`
+
+    which will be translated to `([\w\-]+)`. A value must match this pattern.
+
+
+    [Read more about linker
+    values](/cloud/bitbucket/modules/linker/#usingthebitbucketapitosupplyvalues)
+  summary: Create a linker value
+  responses:
+    '201':
+      description: Successfully created the linker value.
+    '401':
+      description: Authentication must use app JWT
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The linker does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '409':
+      description: The linker already has the value being added.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Addon
+  description: >-
+    Bulk update [linker](/cloud/bitbucket/modules/linker/) values for the
+    specified
+
+    linker of the authenticated application.
+
+
+    A linker value lets applications supply values to modify its regular
+    expression.
+
+
+    The base regular expression must use a Bitbucket-specific match group `(?K)`
+
+    which will be translated to `([\w\-]+)`. A value must match this pattern.
+
+
+    [Read more about linker
+    values](/cloud/bitbucket/modules/linker/#usingthebitbucketapitosupplyvalues)
+  summary: Update a linker value
+  responses:
+    '204':
+      description: Successfully updated the linker values.
+    '400':
+      description: Invalid input.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '401':
+      description: Authentication must use app JWT
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The linker does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+parameters:
+  - name: linker_key
+    in: path
+    description: |-
+      The unique key of a [linker module](/cloud/bitbucket/modules/linker/)
+      as defined in an application descriptor.
+    required: true
+    schema:
+      type: string

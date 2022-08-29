@@ -1,0 +1,78 @@
+get:
+  tags:
+    - Repositories
+  description: >-
+    Returns a paginated list of all public repositories.
+
+
+    This endpoint also supports filtering and sorting of the results. See
+
+    [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering) for more
+    details.
+  summary: List public repositories
+  responses:
+    '200':
+      description: All public repositories.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_repositories.yaml
+  parameters:
+    - name: after
+      in: query
+      description: |-
+        Filter the results to include only repositories created on or
+        after this [ISO-8601](https://en.wikipedia.org/wiki/ISO_8601)
+         timestamp. Example: `YYYY-MM-DDTHH:mm:ss.sssZ`
+      required: false
+      schema:
+        type: string
+    - name: role
+      in: query
+      description: >
+        Filters the result based on the authenticated user's role on each
+        repository.
+
+
+        * **member**: returns repositories to which the user has explicit read
+        access
+
+        * **contributor**: returns repositories to which the user has explicit
+        write access
+
+        * **admin**: returns repositories to which the user has explicit
+        administrator access
+
+        * **owner**: returns all repositories owned by the current user
+      required: false
+      schema:
+        type: string
+        enum:
+          - admin
+          - contributor
+          - member
+          - owner
+    - name: q
+      in: query
+      description: >
+        Query string to narrow down the response as per [filtering and
+        sorting](/cloud/bitbucket/rest/intro/#filtering).
+
+        `role` parameter must also be specified.
+      required: false
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: >
+        Field by which the results should be sorted as per [filtering and
+        sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters: []

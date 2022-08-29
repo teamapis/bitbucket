@@ -1,0 +1,94 @@
+get:
+  tags:
+    - Pipelines
+  description: Find deployment environment level variables.
+  summary: List variables for an environment
+  operationId: getDeploymentVariables
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: environment_uuid
+      description: The environment.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The retrieved deployment variables.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_deployment_variable.yaml
+post:
+  tags:
+    - Pipelines
+  description: Create a deployment environment level variable.
+  summary: Create a variable for an environment
+  operationId: createDeploymentVariable
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: environment_uuid
+      description: The environment.
+      required: true
+      in: path
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/deployment_variable.yaml
+    description: The variable to create
+    required: true
+  responses:
+    '201':
+      description: The variable was created.
+      headers:
+        Location:
+          description: The URL of the newly created variable.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/deployment_variable.yaml
+    '404':
+      description: >-
+        The account, repository, environment or variable with the given UUID was
+        not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '409':
+      description: A variable with the provided key already exists.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

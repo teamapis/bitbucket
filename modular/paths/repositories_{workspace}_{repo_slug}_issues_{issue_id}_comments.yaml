@@ -1,0 +1,109 @@
+get:
+  tags:
+    - Issue tracker
+  description: >-
+    Returns a paginated list of all comments that were made on the
+
+    specified issue.
+
+
+    The default sorting is oldest to newest and can be overridden with
+
+    the `sort` query parameter.
+
+
+    This endpoint also supports filtering and sorting of the results. See
+
+    [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering) for more
+    details.
+  summary: List comments on an issue
+  responses:
+    '200':
+      description: A paginated list of issue comments.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_issue_comments.yaml
+  parameters:
+    - name: q
+      in: query
+      description: |-
+
+        Query string to narrow down the response as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - issue
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Issue tracker
+  description: >-
+    Creates a new issue comment.
+
+
+    ```
+
+    $ curl
+    https://api.bitbucket.org/2.0/repositories/atlassian/prlinks/issues/42/comments/
+    \
+      -X POST -u evzijst \
+      -H 'Content-Type: application/json' \
+      -d '{"content": {"raw": "Lorem ipsum."}}'
+    ```
+  summary: Create a comment on an issue
+  responses:
+    '201':
+      description: The newly created comment.
+      headers:
+        Location:
+          description: The location of the newly issue comment.
+          schema:
+            type: string
+    '400':
+      description: >-
+        If the input was invalid, or if the comment being created is detected as
+        spam 
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/issue_comment.yaml
+    description: The new issue comment object.
+    required: true
+  security:
+    - oauth2:
+        - issue:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: issue_id
+    in: path
+    description: The issue id
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

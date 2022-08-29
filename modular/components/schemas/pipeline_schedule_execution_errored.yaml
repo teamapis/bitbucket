@@ -1,0 +1,8 @@
+allOf:
+  - $ref: ./pipeline_schedule_execution.yaml
+  - additionalProperties: true
+    type: object
+    description: A Pipelines schedule execution that failed to be executed.
+    properties:
+      error:
+        $ref: ./pipeline_error.yaml

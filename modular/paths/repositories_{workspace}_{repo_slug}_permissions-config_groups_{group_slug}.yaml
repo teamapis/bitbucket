@@ -1,0 +1,283 @@
+delete:
+  tags:
+    - Repositories
+  description: >-
+    Deletes the repository group permission between the requested repository and
+    group, if one exists.
+
+
+    Only users with admin permission for the repository may access this
+    resource.
+
+
+    Example:
+
+
+    $ curl -X DELETE
+    https://api.bitbucket.org/2.0/repositories/atlassian_tutorial
+
+    /geordi/permissions-config/groups/developers
+
+
+
+    HTTP/1.1 204
+  summary: Delete an explicit group permission for a repository
+  responses:
+    '204':
+      description: Group permission deleted
+    '401':
+      description: The user couldn't be authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: >-
+        The requesting user isn't an admin of the repository, or the
+        authentication method was not via app password.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        The workspace does not exist, the repository does not exist,or the group
+        does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Repositories
+  description: >-
+    Returns the group permission for a given group slug and repository
+
+
+    Only users with admin permission for the repository may access this
+    resource.
+
+
+    Permissions can be:
+
+
+    * `admin`
+
+    * `write`
+
+    * `read`
+
+    * `none`
+
+
+    Example:
+
+
+    ```
+
+    $ curl
+    https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/geordi/permissions-config/groups/developers
+
+
+    HTTP/1.1 200
+
+    Location:
+
+    https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/geordi/permissions-config/groups/developers
+
+
+    {
+        "type": "repository_group_permission",
+        "group": {
+            "type": "group",
+            "name": "Developers",
+            "slug": "developers"
+        },
+        "repository": {
+            "type": "repository",
+            "name": "geordi",
+            "full_name": "atlassian_tutorial/geordi",
+            "uuid": "{85d08b4e-571d-44e9-a507-fa476535aa98}"
+        },
+        "permission": "read",
+        "links": {
+          "self": {
+            "href":
+            "https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/geordi/permissions-config/groups/developers"
+          }
+        }
+    }
+
+    ```
+  summary: Get an explicit group permission for a repository
+  responses:
+    '200':
+      description: Group permission for group slug and repository
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/repository_group_permission.yaml
+    '401':
+      description: The user couldn't be authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: The requesting user isn't an admin of the repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The given user, workspace, and/or repository could not be found
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Repositories
+  description: >-
+    Updates the group permission if it exists.
+
+
+    Only users with admin permission for the repository may access this
+    resource.
+
+
+    The only authentication method supported for this endpoint is via app
+    passwords.
+
+
+    Permissions can be:
+
+
+    * `admin`
+
+    * `write`
+
+    * `read`
+
+
+    Example:
+
+    ```
+
+    $ curl -X PUT -H "Content-Type: application/json"
+
+    https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/geordi/permissions-config/groups/developers
+
+    -d
+
+    '{
+        "permission": "write"
+    }'
+
+
+    HTTP/1.1 200
+
+    Location:
+
+    https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/geordi/permissions-config/groups/developers
+
+
+    {
+        "type": "repository_group_permission",
+        "group": {
+            "type": "group",
+            "name": "Developers",
+            "slug": "developers"
+        },
+        "repository": {
+            "type": "repository",
+            "name": "geordi",
+            "full_name": "atlassian_tutorial/geordi",
+            "uuid": "{85d08b4e-571d-44e9-a507-fa476535aa98}"
+        },
+        "permission": "write",
+        "links": {
+          "self": {
+            "href":
+            "https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/geordi/permissions-config/groups/developers"
+          }
+        }
+    }
+
+    ```
+  summary: Update an explicit group permission for a repository
+  responses:
+    '200':
+      description: Group permission updated
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/repository_group_permission.yaml
+    '400':
+      description: >-
+        No permission value was provided or the value is invalid(not one of
+        read, write, or admin)
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '401':
+      description: The user couldn't be authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: >-
+        The requesting user isn't an admin of the repository, or the
+        authentication method was not via app password.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        The workspace does not exist, the repository does not exist,or the group
+        does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+parameters:
+  - name: group_slug
+    in: path
+    description: Slug of the requested group.
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

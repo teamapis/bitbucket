@@ -1,0 +1,81 @@
+delete:
+  tags:
+    - Pullrequests
+  description: ''
+  summary: Remove change request for a pull request
+  responses:
+    '204':
+      description: >-
+        An empty response indicating the authenticated user's request for change
+        has been withdrawn.
+    '401':
+      description: The request wasn't authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The specified pull request or the repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - pullrequest:write
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Pullrequests
+  description: ''
+  summary: Request changes for a pull request
+  responses:
+    '200':
+      description: >-
+        The `participant` object recording that the authenticated user requested
+        changes on the pull request.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/participant.yaml
+    '401':
+      description: The request wasn't authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The specified pull request or the repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - pullrequest:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: pull_request_id
+    in: path
+    description: The id of the pull request.
+    required: true
+    schema:
+      type: integer
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

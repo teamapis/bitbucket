@@ -1,0 +1,65 @@
+allOf:
+  - $ref: ./object.yaml
+  - type: object
+    title: Webhook Subscription
+    description: A Webhook subscription.
+    properties:
+      uuid:
+        type: string
+        description: The webhook's id
+      url:
+        type: string
+        description: The URL events get delivered to.
+        format: uri
+      description:
+        type: string
+        description: A user-defined description of the webhook.
+      subject_type:
+        type: string
+        description: >-
+          The type of entity. Set to either `repository` or `workspace` based on
+          where the subscription is defined.
+        enum:
+          - repository
+          - workspace
+      subject:
+        $ref: ./object.yaml
+      active:
+        type: boolean
+      created_at:
+        type: string
+        format: date-time
+      events:
+        type: array
+        description: The events this webhook is subscribed to.
+        items:
+          type: string
+          enum:
+            - repo:transfer
+            - repo:commit_status_created
+            - issue:updated
+            - repo:commit_comment_created
+            - project:updated
+            - pullrequest:rejected
+            - repo:push
+            - repo:commit_status_updated
+            - repo:fork
+            - pullrequest:comment_deleted
+            - issue:created
+            - issue:comment_created
+            - pullrequest:comment_created
+            - repo:deleted
+            - repo:created
+            - pullrequest:changes_request_created
+            - repo:updated
+            - repo:imported
+            - pullrequest:changes_request_removed
+            - pullrequest:unapproved
+            - pullrequest:created
+            - pullrequest:updated
+            - pullrequest:comment_updated
+            - pullrequest:fulfilled
+            - pullrequest:approved
+        minItems: 1
+        uniqueItems: true
+    additionalProperties: true

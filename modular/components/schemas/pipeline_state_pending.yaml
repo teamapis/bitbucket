@@ -1,0 +1,12 @@
+allOf:
+  - $ref: ./pipeline_state.yaml
+  - additionalProperties: true
+    type: object
+    title: Pipeline Pending State
+    description: A Bitbucket Pipelines PENDING pipeline state.
+    properties:
+      name:
+        enum:
+          - PENDING
+        type: string
+        description: The name of pipeline state (PENDING).

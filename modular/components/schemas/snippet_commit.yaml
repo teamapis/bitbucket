@@ -1,0 +1,46 @@
+allOf:
+  - $ref: ./base_commit.yaml
+  - type: object
+    title: Snippet Commit
+    description: ''
+    properties:
+      links:
+        type: object
+        properties:
+          self:
+            type: object
+            title: Link
+            description: A link to a resource related to this object.
+            properties:
+              href:
+                type: string
+                format: uri
+              name:
+                type: string
+            additionalProperties: false
+          html:
+            type: object
+            title: Link
+            description: A link to a resource related to this object.
+            properties:
+              href:
+                type: string
+                format: uri
+              name:
+                type: string
+            additionalProperties: false
+          diff:
+            type: object
+            title: Link
+            description: A link to a resource related to this object.
+            properties:
+              href:
+                type: string
+                format: uri
+              name:
+                type: string
+            additionalProperties: false
+        additionalProperties: false
+      snippet:
+        $ref: ./snippet.yaml
+    additionalProperties: true

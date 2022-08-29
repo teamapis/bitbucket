@@ -1,0 +1,119 @@
+delete:
+  tags:
+    - Repositories
+    - Webhooks
+  description: |-
+    Deletes the specified webhook subscription from the given
+    repository.
+  summary: Delete a webhook for a repository
+  responses:
+    '204':
+      description: When the webhook was deleted successfully
+    '403':
+      description: >-
+        If the authenticated user does not have permission to delete the
+        webhook.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the webhook or repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - webhook
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Repositories
+    - Webhooks
+  description: |-
+    Returns the webhook with the specified id installed on the specified
+    repository.
+  summary: Get a webhook for a repository
+  responses:
+    '200':
+      description: The webhook subscription object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/webhook_subscription.yaml
+    '404':
+      description: If the webhook or repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - webhook
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Repositories
+    - Webhooks
+  description: |-
+    Updates the specified webhook subscription.
+
+    The following properties can be mutated:
+
+    * `description`
+    * `url`
+    * `active`
+    * `events`
+  summary: Update a webhook for a repository
+  responses:
+    '200':
+      description: The webhook subscription object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/webhook_subscription.yaml
+    '403':
+      description: >-
+        If the authenticated user does not have permission to update the
+        webhook.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the webhook or repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - webhook
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: uid
+    in: path
+    description: Installed webhook's ID
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

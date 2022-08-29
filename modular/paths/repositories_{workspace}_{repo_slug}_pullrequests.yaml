@@ -1,0 +1,212 @@
+get:
+  tags:
+    - Pullrequests
+  description: >-
+    Returns all pull requests on the specified repository.
+
+
+    By default only open pull requests are returned. This can be controlled
+
+    using the `state` query parameter. To retrieve pull requests that are
+
+    in one of multiple states, repeat the `state` parameter for each
+
+    individual state.
+
+
+    This endpoint also supports filtering and sorting of the results. See
+
+    [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering) for more
+    details.
+  summary: List pull requests
+  responses:
+    '200':
+      description: All pull requests on the specified repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_pullrequests.yaml
+    '401':
+      description: If the repository is private and the request was not authenticated.
+    '404':
+      description: If the specified repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: state
+      in: query
+      description: >-
+        Only return pull requests that are in this state. This parameter can be
+        repeated.
+      schema:
+        type: string
+        enum:
+          - OPEN
+          - MERGED
+          - DECLINED
+          - SUPERSEDED
+  security:
+    - oauth2:
+        - pullrequest
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Pullrequests
+  description: >-
+    Creates a new pull request where the destination repository is
+
+    this repository and the author is the authenticated user.
+
+
+    The minimum required fields to create a pull request are `title` and
+
+    `source`, specified by a branch name.
+
+
+    ```
+
+    curl
+    https://api.bitbucket.org/2.0/repositories/my-workspace/my-repository/pullrequests
+    \
+        -u my-username:my-password \
+        --request POST \
+        --header 'Content-Type: application/json' \
+        --data '{
+            "title": "My Title",
+            "source": {
+                "branch": {
+                    "name": "staging"
+                }
+            }
+        }'
+    ```
+
+
+    If the pull request's `destination` is not specified, it will default
+
+    to the `repository.mainbranch`. To open a pull request to a
+
+    different branch, say from a feature branch to a staging branch,
+
+    specify a `destination` (same format as the `source`):
+
+
+    ```
+
+    {
+        "title": "My Title",
+        "source": {
+            "branch": {
+                "name": "my-feature-branch"
+            }
+        },
+        "destination": {
+            "branch": {
+                "name": "staging"
+            }
+        }
+    }
+
+    ```
+
+
+    Reviewers can be specified by adding an array of user objects as the
+
+    `reviewers` property.
+
+
+    ```
+
+    {
+        "title": "My Title",
+        "source": {
+            "branch": {
+                "name": "my-feature-branch"
+            }
+        },
+        "reviewers": [
+            {
+                "uuid": "{504c3b62-8120-4f0c-a7bc-87800b9d6f70}"
+            }
+        ]
+    }
+
+    ```
+
+
+    Other fields:
+
+
+    * `description` - a string
+
+    * `close_source_branch` - boolean that specifies if the source branch should
+    be closed upon merging
+  summary: Create a pull request
+  responses:
+    '201':
+      description: The newly created pull request.
+      headers:
+        Location:
+          description: The URL of new newly created pull request.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pullrequest.yaml
+    '400':
+      description: >-
+        If the input document was invalid, or if the caller lacks the privilege
+        to create repositories under the targeted account.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '401':
+      description: If the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/pullrequest.yaml
+    description: >-
+      The new pull request.
+
+
+      The request URL you POST to becomes the destination repository URL. For
+      this reason, you must specify an explicit source repository in the request
+      object if you want to pull from a different repository (fork).
+
+
+      Since not all elements are required or even mutable, you only need to
+      include the elements you want to initialize, such as the source branch and
+      the title.
+  security:
+    - oauth2:
+        - pullrequest:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

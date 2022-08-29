@@ -1,0 +1,94 @@
+get:
+  tags:
+    - Pullrequests
+  description: Returns the specified pull request.
+  summary: Get a pull request
+  responses:
+    '200':
+      description: The pull request object
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pullrequest.yaml
+    '401':
+      description: If the repository is private and the request was not authenticated.
+    '404':
+      description: If the repository or pull request does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - pullrequest
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Pullrequests
+  description: |-
+    Mutates the specified pull request.
+
+    This can be used to change the pull request's branches or description.
+
+    Only open pull requests can be mutated.
+  summary: Update a pull request
+  responses:
+    '200':
+      description: The updated pull request
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pullrequest.yaml
+    '400':
+      description: If the input document was invalid.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '401':
+      description: If the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the repository or pull request id does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/pullrequest.yaml
+    description: The pull request that is to be updated.
+  security:
+    - oauth2:
+        - pullrequest:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: pull_request_id
+    in: path
+    description: The id of the pull request.
+    required: true
+    schema:
+      type: integer
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

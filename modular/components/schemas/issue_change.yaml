@@ -1,0 +1,137 @@
+type: object
+title: Issue Change
+description: An issue change.
+properties:
+  type:
+    type: string
+  links:
+    type: object
+    properties:
+      self:
+        type: object
+        title: Link
+        description: A link to a resource related to this object.
+        properties:
+          href:
+            type: string
+            format: uri
+          name:
+            type: string
+        additionalProperties: false
+      issue:
+        type: object
+        title: Link
+        description: A link to a resource related to this object.
+        properties:
+          href:
+            type: string
+            format: uri
+          name:
+            type: string
+        additionalProperties: false
+    additionalProperties: false
+  name:
+    type: string
+  created_on:
+    type: string
+    format: date-time
+  user:
+    $ref: ./account.yaml
+  issue:
+    $ref: ./issue.yaml
+  changes:
+    type: object
+    properties:
+      assignee:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+        additionalProperties: false
+      state:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+        additionalProperties: false
+      title:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+        additionalProperties: false
+      kind:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+        additionalProperties: false
+      milestone:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+        additionalProperties: false
+      component:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+        additionalProperties: false
+      priority:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+        additionalProperties: false
+      version:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+        additionalProperties: false
+      content:
+        type: object
+        properties:
+          old:
+            type: string
+          new:
+            type: string
+        additionalProperties: false
+    additionalProperties: false
+  message:
+    type: object
+    properties:
+      raw:
+        type: string
+        description: The text as it was typed by a user.
+      markup:
+        type: string
+        description: The type of markup language the raw content is to be interpreted in.
+        enum:
+          - markdown
+          - creole
+          - plaintext
+      html:
+        type: string
+        description: The user's content rendered as HTML.
+    additionalProperties: false
+required:
+  - type
+additionalProperties: true

@@ -1,0 +1,9 @@
+allOf:
+  - $ref: ./account.yaml
+  - type: object
+    title: Team
+    description: A team object.
+    properties:
+      links:
+        $ref: ./team_links.yaml
+    additionalProperties: true

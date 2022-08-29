@@ -1,0 +1,21 @@
+get:
+  tags:
+    - Addon
+  description: |-
+    Gets a list of all [linkers](/cloud/bitbucket/modules/linker/)
+    for the authenticated application.
+  summary: List linkers for an app
+  responses:
+    '200':
+      description: Successful.
+    '401':
+      description: Authentication must use app JWT
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+parameters: []

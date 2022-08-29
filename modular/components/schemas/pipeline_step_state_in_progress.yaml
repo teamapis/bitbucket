@@ -1,0 +1,11 @@
+allOf:
+  - $ref: ./pipeline_step_state.yaml
+  - additionalProperties: true
+    type: object
+    description: A Bitbucket Pipelines IN_PROGRESS pipeline step state.
+    properties:
+      name:
+        enum:
+          - IN_PROGRESS
+        type: string
+        description: The name of pipeline step state (IN_PROGRESS).

@@ -1,0 +1,77 @@
+post:
+  tags:
+    - Pullrequests
+  description: Merges the pull request.
+  summary: Merge a pull request
+  responses:
+    '200':
+      description: The pull request object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pullrequest.yaml
+    '202':
+      description: >-
+        In the Location header, the URL to poll for the pull request merge
+        status
+    '555':
+      description: |-
+        If the merge took too long and timed out.
+        In this case the caller should retry the request later
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: async
+      in: query
+      description: |-
+        Default value is false.
+
+
+        When set to true, runs merge asynchronously and
+        immediately returns a 202 with polling link to
+        the task-status API in the Location header.
+
+
+        When set to false, runs merge and waits for it to
+        complete, returning 200 when it succeeds. If the
+        duration of the merge exceeds a timeout threshold,
+        the API returns a 202 with polling link to the
+        task-status API in the Location header.
+      required: false
+      schema:
+        type: boolean
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/pullrequest_merge_parameters.yaml
+  security:
+    - oauth2:
+        - pullrequest:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: pull_request_id
+    in: path
+    description: The id of the pull request.
+    required: true
+    schema:
+      type: integer
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

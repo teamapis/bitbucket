@@ -1,0 +1,138 @@
+put:
+  responses:
+    '204':
+      description: An empty response.
+  operationId: updatePullRequestHostedPropertyValue
+  summary: Update a pull request application property
+  description: >-
+    Update an [application property](/cloud/bitbucket/application-properties/)
+    value stored against a pull request.
+  parameters:
+    - required: true
+      in: path
+      name: workspace
+      description: >-
+        The repository container; either the workspace slug or the UUID in curly
+        braces.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: repo_slug
+      description: The repository.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: pullrequest_id
+      description: The pull request ID.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: app_key
+      description: The key of the Connect app.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: property_name
+      description: The name of the property.
+      schema:
+        type: string
+  requestBody:
+    $ref: ../components/requestBodies/application_property.yaml
+  tags:
+    - properties
+delete:
+  responses:
+    '204':
+      description: An empty response.
+  operationId: deletePullRequestHostedPropertyValue
+  summary: Delete a pull request application property
+  description: >-
+    Delete an [application property](/cloud/bitbucket/application-properties/)
+    value stored against a pull request.
+  parameters:
+    - required: true
+      in: path
+      name: workspace
+      description: >-
+        The repository container; either the workspace slug or the UUID in curly
+        braces.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: repo_slug
+      description: The repository.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: pullrequest_id
+      description: The pull request ID.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: app_key
+      description: The key of the Connect app.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: property_name
+      description: The name of the property.
+      schema:
+        type: string
+  tags:
+    - properties
+get:
+  responses:
+    '200':
+      description: The value of the property.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/application_property.yaml
+  operationId: getPullRequestHostedPropertyValue
+  summary: Get a pull request application property
+  description: >-
+    Retrieve an [application property](/cloud/bitbucket/application-properties/)
+    value stored against a pull request.
+  parameters:
+    - required: true
+      in: path
+      name: workspace
+      description: >-
+        The repository container; either the workspace slug or the UUID in curly
+        braces.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: repo_slug
+      description: The repository.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: pullrequest_id
+      description: The pull request ID.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: app_key
+      description: The key of the Connect app.
+      schema:
+        type: string
+    - required: true
+      in: path
+      name: property_name
+      description: The name of the property.
+      schema:
+        type: string
+  tags:
+    - properties

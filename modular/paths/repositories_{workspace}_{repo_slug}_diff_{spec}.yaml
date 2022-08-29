@@ -1,0 +1,146 @@
+get:
+  tags:
+    - Commits
+  description: |-
+    Produces a raw git-style diff.
+
+    #### Single commit spec
+
+    If the `spec` argument to this API is a single commit, the diff is
+    produced against the first parent of the specified commit.
+
+    #### Two commit spec
+
+    Two commits separated by `..` may be provided as the `spec`, e.g.,
+    `3a8b42..9ff173`. When two commits are provided and the `topic` query
+    parameter is true or absent, this API produces a 2-way three dot diff.
+    This is the diff between source commit and the merge base of the source
+    commit and the destination commit. When the `topic` query param is false,
+    a simple git-style diff is produced.
+
+    The two commits are interpreted as follows:
+
+    * First commit: the commit containing the changes we wish to preview
+    * Second commit: the commit representing the state to which we want to
+      compare the first commit
+    * **Note**: This is the opposite of the order used in `git diff`.
+
+    #### Comparison to patches
+
+    While similar to patches, diffs:
+
+    * Don't have a commit header (username, commit message, etc)
+    * Support the optional `path=foo/bar.py` query param to filter
+      the diff to just that one file diff
+
+    #### Response
+
+    The raw diff is returned as-is, in whatever encoding the files in the
+    repository use. It is not decoded into unicode. As such, the
+    content-type is `text/plain`.
+  summary: Compare two commits
+  responses:
+    '200':
+      description: The raw diff
+    '555':
+      description: |-
+        If the diff was too large and timed out.
+
+        Since this endpoint does not employ any form of pagination, but
+        instead returns the diff as a single document, it can run into
+        trouble on very large diffs. If Bitbucket times out in cases
+        like these, a 555 status code is returned.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: context
+      in: query
+      description: Generate diffs with <n> lines of context instead of the usual three.
+      required: false
+      schema:
+        type: integer
+    - name: path
+      in: query
+      description: |-
+        Limit the diff to a particular file (this parameter
+        can be repeated for multiple paths).
+      required: false
+      schema:
+        type: string
+    - name: ignore_whitespace
+      in: query
+      description: Generate diffs that ignore whitespace.
+      required: false
+      schema:
+        type: boolean
+    - name: binary
+      in: query
+      description: Generate diffs that include binary files, true if omitted.
+      required: false
+      schema:
+        type: boolean
+    - name: renames
+      in: query
+      description: Whether to perform rename detection, true if omitted.
+      required: false
+      schema:
+        type: boolean
+    - name: merge
+      in: query
+      description: |-
+        This parameter is deprecated and will be removed at the end
+        of 2022. The 'topic' parameter should be used instead. The
+        'merge' and 'topic' parameters cannot be both used at the same
+        time.
+
+        If true, the source commit is merged into the
+        destination commit, and then a diff from the
+        destination to the merge result is returned. If false,
+        a simple 'two dot' diff between the source and
+        destination is returned. True if omitted.
+      required: false
+      schema:
+        type: boolean
+    - name: topic
+      in: query
+      description: |-
+        If true, returns 2-way 'three-dot' diff.
+        This is a diff between the source commit and the merge base
+        of the source commit and the destination commit.
+        If false, a simple 'two dot' diff between the source and
+        destination is returned.
+      required: false
+      schema:
+        type: boolean
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: spec
+    in: path
+    description: |
+      A commit SHA (e.g. `3a8b42`) or a commit range using double dot
+      notation (e.g. `3a8b42..9ff173`).
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

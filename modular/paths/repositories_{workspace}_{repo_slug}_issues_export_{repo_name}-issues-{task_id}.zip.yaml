@@ -1,0 +1,105 @@
+get:
+  tags:
+    - Issue tracker
+  description: >-
+    This endpoint is used to poll for the progress of an issue export
+
+    job and return the zip file after the job is complete.
+
+    As long as the job is running, this will return a 200 response
+
+    with in the response body a description of the current status.
+
+
+    After the job has been scheduled, but before it starts executing, this
+
+    endpoint's response is:
+
+
+    {
+     "type": "issue_job_status",
+     "status": "ACCEPTED",
+     "phase": "Initializing",
+     "total": 0,
+     "count": 0,
+     "pct": 0
+    }
+
+
+
+    Then once it starts running, it becomes:
+
+
+    {
+     "type": "issue_job_status",
+     "status": "STARTED",
+     "phase": "Attachments",
+     "total": 15,
+     "count": 11,
+     "pct": 73
+    }
+
+
+    Once the job has successfully completed, it returns a stream of the zip
+    file.
+  summary: Check issue export status
+  responses:
+    '202':
+      description: Export job accepted
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/issue_job_status.yaml
+    '401':
+      description: The request wasn't authenticated properly
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: When the authenticated user does not have admin permission on the repo
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: No export job has begun
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue
+        - repository:admin
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_name
+    in: path
+    description: The name of the repo
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: task_id
+    in: path
+    description: The ID of the export task
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

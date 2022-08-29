@@ -1,0 +1,21 @@
+type: object
+properties:
+  type:
+    type: string
+    readOnly: true
+  content_match_count:
+    type: integer
+    format: int64
+    readOnly: true
+  content_matches:
+    type: array
+    readOnly: true
+    items:
+      $ref: ./search_content_match.yaml
+  path_matches:
+    type: array
+    readOnly: true
+    items:
+      $ref: ./search_segment.yaml
+  file:
+    $ref: ./commit_file.yaml

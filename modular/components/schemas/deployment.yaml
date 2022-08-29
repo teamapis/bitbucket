@@ -1,0 +1,16 @@
+allOf:
+  - $ref: ./object.yaml
+  - additionalProperties: true
+    type: object
+    title: Deployment
+    description: A Bitbucket Deployment.
+    properties:
+      uuid:
+        type: string
+        description: The UUID identifying the deployment.
+      state:
+        $ref: ./deployment_state.yaml
+      environment:
+        $ref: ./deployment_environment.yaml
+      release:
+        $ref: ./deployment_release.yaml

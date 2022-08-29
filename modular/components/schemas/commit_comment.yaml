@@ -1,0 +1,9 @@
+allOf:
+  - $ref: ./comment.yaml
+  - type: object
+    title: Commit Comment
+    description: A commit comment.
+    properties:
+      commit:
+        $ref: ./commit.yaml
+    additionalProperties: true

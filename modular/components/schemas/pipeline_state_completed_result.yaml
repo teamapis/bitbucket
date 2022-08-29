@@ -1,0 +1,7 @@
+allOf:
+  - $ref: ./object.yaml
+  - additionalProperties: true
+    type: object
+    title: Pipeline Completed Result
+    description: A result of a completed pipeline state.
+    properties: {}

@@ -1,0 +1,8 @@
+allOf:
+  - $ref: ./pipeline_schedule_execution.yaml
+  - additionalProperties: true
+    type: object
+    description: A Pipelines executed schedule execution.
+    properties:
+      pipeline:
+        $ref: ./pipeline.yaml

@@ -1,0 +1,118 @@
+get:
+  tags:
+    - Pipelines
+  deprecated: true
+  summary: Get a variable for a user
+  description: >-
+    Retrieve a user level variable.
+
+    This endpoint has been deprecated, and you should use the new workspaces
+    endpoint. For more information, see [the
+    announcement](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/).
+  operationId: getPipelineVariableForUser
+  parameters:
+    - name: selected_user
+      description: >-
+        Either the UUID of the account surrounded by curly-braces, for example
+        `{account UUID}`, OR an Atlassian Account ID.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: variable_uuid
+      description: The UUID of the variable to retrieve.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The variable.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_variable.yaml
+    '404':
+      description: The account or variable with the given UUID was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+put:
+  tags:
+    - Pipelines
+  deprecated: true
+  summary: Update a variable for a user
+  description: >-
+    Update a user level variable.
+
+    This endpoint has been deprecated, and you should use the new workspaces
+    endpoint. For more information, see [the
+    announcement](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/).
+  operationId: updatePipelineVariableForUser
+  parameters:
+    - name: selected_user
+      description: >-
+        Either the UUID of the account surrounded by curly-braces, for example
+        `{account UUID}`, OR an Atlassian Account ID.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: variable_uuid
+      description: The UUID of the variable.
+      required: true
+      in: path
+      schema:
+        type: string
+  requestBody:
+    $ref: ../components/requestBodies/pipeline_variable.yaml
+  responses:
+    '200':
+      description: The variable was updated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_variable.yaml
+    '404':
+      description: The account or the variable was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+delete:
+  tags:
+    - Pipelines
+  deprecated: true
+  summary: Delete a variable for a user
+  description: >-
+    Delete an account level variable.
+
+    This endpoint has been deprecated, and you should use the new workspaces
+    endpoint. For more information, see [the
+    announcement](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/).
+  operationId: deletePipelineVariableForUser
+  parameters:
+    - name: selected_user
+      description: >-
+        Either the UUID of the account surrounded by curly-braces, for example
+        `{account UUID}`, OR an Atlassian Account ID.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: variable_uuid
+      description: The UUID of the variable to delete.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '204':
+      description: The variable was deleted
+    '404':
+      description: The account or the variable with the provided UUID does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

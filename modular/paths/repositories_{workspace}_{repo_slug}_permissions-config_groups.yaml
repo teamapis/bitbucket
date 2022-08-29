@@ -1,0 +1,114 @@
+get:
+  tags:
+    - Repositories
+  description: >-
+    Returns a paginated list of explicit group permissions for the given
+    repository.
+
+    This endpoint does not support BBQL features.
+
+
+    Example:
+
+
+    ```
+
+    $ curl
+    https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/geordi/permissions-config/groups
+
+
+    HTTP/1.1 200
+
+    Location:
+    https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/geordi/permissions-config/groups
+
+
+    {
+      "pagelen": 10,
+      "values": [
+        {
+          "type": "repository_group_permission",
+          "group": {
+            "type": "group",
+            "name": "Administrators",
+            "slug": "administrators"
+          },
+          "permission": "admin",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/
+                       geordi/permissions-config/groups/administrators"
+            }
+          }
+        },
+        {
+          "type": "repository_group_permission",
+          "group": {
+            "type": "group",
+            "name": "Developers",
+            "slug": "developers"
+          },
+          "permission": "read",
+          "links": {
+            "self": {
+              "href": "https://api.bitbucket.org/2.0/repositories/atlassian_tutorial/
+                       geordi/permissions-config/groups/developers"
+            }
+          }
+        }
+      ],
+      "page": 1,
+      "size": 2
+    }
+
+    ```
+  summary: List explicit group permissions for a repository
+  responses:
+    '200':
+      description: Paginated of explicit group permissions on the repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_repository_group_permissions.yaml
+    '401':
+      description: The user couldn't be authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: The requesting user isn't an admin of the repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: >-
+        One or both of the workspace and repository doesn't exist for the given
+        identifiers.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

@@ -1,0 +1,6 @@
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/snippet.yaml
+description: The new snippet object.
+required: true

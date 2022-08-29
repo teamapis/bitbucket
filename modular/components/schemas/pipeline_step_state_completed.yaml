@@ -1,0 +1,13 @@
+allOf:
+  - $ref: ./pipeline_step_state.yaml
+  - additionalProperties: true
+    type: object
+    description: A Bitbucket Pipelines COMPLETED pipeline step state.
+    properties:
+      name:
+        enum:
+          - COMPLETED
+        type: string
+        description: The name of pipeline step state (COMPLETED).
+      result:
+        $ref: ./pipeline_step_state_completed_result.yaml

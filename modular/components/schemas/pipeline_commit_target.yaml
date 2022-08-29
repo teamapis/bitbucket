@@ -1,0 +1,11 @@
+allOf:
+  - $ref: ./pipeline_target.yaml
+  - additionalProperties: true
+    type: object
+    title: Pipeline Commit Target
+    description: A Bitbucket Pipelines commit target.
+    properties:
+      commit:
+        $ref: ./commit.yaml
+      selector:
+        $ref: ./pipeline_selector.yaml

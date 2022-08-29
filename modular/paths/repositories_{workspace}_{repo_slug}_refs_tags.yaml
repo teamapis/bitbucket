@@ -1,0 +1,150 @@
+get:
+  tags:
+    - Refs
+  description: >-
+    Returns the tags in the repository.
+
+
+    By default, results will be in the order the underlying source control
+    system returns them and identical to
+
+    the ordering one sees when running "$ git tag --list". Note that this
+    follows simple
+
+    lexical ordering of the ref names.
+
+
+    This can be undesirable as it does apply any natural sorting semantics,
+    meaning for instance that tags are
+
+    sorted ["v10", "v11", "v9"] instead of ["v9", "v10", "v11"].
+
+
+    Sorting can be changed using the ?sort= query parameter. When using
+    ?sort=name to explicitly sort on ref name,
+
+    Bitbucket will apply natural sorting and interpret numerical values as
+    numbers instead of strings.
+  summary: List tags
+  responses:
+    '200':
+      description: >-
+        A paginated list of tags matching any filter criteria that were
+        provided.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_tags.yaml
+    '403':
+      description: |
+        If the repository is private and the authenticated user does not have
+        access to it.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The specified repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: q
+      in: query
+      description: |-
+
+        Query string to narrow down the response as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: >-
+
+        Field by which the results should be sorted as per
+
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering). The
+        `name`
+
+        field is handled specially for tags in that, if specified as the sort
+        field, it
+
+        uses a natural sort order instead of the default lexicographical sort
+        order. For example,
+
+        it will return ['1.1', '1.2', '1.10'] instead of ['1.1', '1.10', '1.2'].
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Refs
+  description: |-
+    Creates a new tag in the specified repository.
+
+    The payload of the POST should consist of a JSON document that
+    contains the name of the tag and the target hash.
+
+    ```
+    curl https://api.bitbucket.org/2.0/repositories/jdoe/myrepo/refs/tags \
+    -s -u jdoe -X POST -H "Content-Type: application/json" \
+    -d '{
+        "name" : "new-tag-name",
+        "target" : {
+            "hash" : "a1b2c3d4e5f6",
+        }
+    }'
+    ```
+
+    This endpoint does support using short hash prefixes for the commit
+    hash, but it may return a 400 response if the provided prefix is
+    ambiguous. Using a full commit hash is the preferred approach.
+  summary: Create a tag
+  responses:
+    '201':
+      description: The newly created tag.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/tag.yaml
+    '400':
+      description: >-
+        If the target hash is missing, ambiguous, or invalid, or if the name is
+        not provided.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/tag.yaml
+    required: true
+  security:
+    - oauth2:
+        - repository:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

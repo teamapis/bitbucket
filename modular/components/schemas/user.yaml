@@ -1,0 +1,30 @@
+allOf:
+  - $ref: ./account.yaml
+  - type: object
+    title: User
+    description: A user object.
+    properties:
+      links:
+        $ref: ./user_links.yaml
+      account_id:
+        type: string
+        description: The user's Atlassian account ID.
+      account_status:
+        type: string
+        description: >-
+          The status of the account. Currently the only possible value is
+          "active", but more values may be added in the future.
+      has_2fa_enabled:
+        type: boolean
+      nickname:
+        type: string
+        description: >-
+          Account name defined by the owner. Should be used instead of the
+          "username" field. Note that "nickname" cannot be used in place of
+          "username" in URLs and queries, as "nickname" is not guaranteed to be
+          unique.
+      is_staff:
+        type: boolean
+      website:
+        type: string
+    additionalProperties: true

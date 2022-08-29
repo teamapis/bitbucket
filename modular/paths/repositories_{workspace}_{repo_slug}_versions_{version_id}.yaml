@@ -1,0 +1,48 @@
+get:
+  tags:
+    - Issue tracker
+  description: Returns the specified issue tracker version object.
+  summary: Get a defined version for issues
+  responses:
+    '200':
+      description: The specified version object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/version.yaml
+    '404':
+      description: >-
+        The specified repository or version does not exist or does not have the
+        issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: version_id
+    in: path
+    description: The version's id
+    required: true
+    schema:
+      type: integer
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

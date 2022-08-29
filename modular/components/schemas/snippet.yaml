@@ -1,0 +1,29 @@
+allOf:
+  - $ref: ./object.yaml
+  - type: object
+    title: Snippet
+    description: A snippet object.
+    properties:
+      id:
+        type: integer
+        minimum: 0
+      title:
+        type: string
+      scm:
+        type: string
+        description: The DVCS used to store the snippet.
+        enum:
+          - git
+      created_on:
+        type: string
+        format: date-time
+      updated_on:
+        type: string
+        format: date-time
+      owner:
+        $ref: ./account.yaml
+      creator:
+        $ref: ./account.yaml
+      is_private:
+        type: boolean
+    additionalProperties: true

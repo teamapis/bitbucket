@@ -1,0 +1,110 @@
+get:
+  tags:
+    - Commits
+  description: |-
+    Returns the commit's comments.
+
+    This includes both global and inline comments.
+
+    The default sorting is oldest to newest and can be overridden with
+    the `sort` query parameter.
+  summary: List a commit's comments
+  responses:
+    '200':
+      description: A paginated list of commit comments.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_commit_comments.yaml
+  parameters:
+    - name: q
+      in: query
+      description: |
+        Query string to narrow down the response as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: |
+        Field by which the results should be sorted as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Commits
+  description: >-
+    Creates new comment on the specified commit.
+
+
+    To post a reply to an existing comment, include the `parent.id` field:
+
+
+    ```
+
+    $ curl
+    https://api.bitbucket.org/2.0/repositories/atlassian/prlinks/commit/db9ba1e031d07a02603eae0e559a7adc010257fc/comments/
+    \
+      -X POST -u evzijst \
+      -H 'Content-Type: application/json' \
+      -d '{"content": {"raw": "One more thing!"},
+           "parent": {"id": 5728901}}'
+    ```
+  summary: Create comment for a commit
+  responses:
+    '201':
+      description: The newly created comment.
+      headers:
+        Location:
+          description: The location of the newly created comment.
+          schema:
+            type: string
+    '400':
+      description: >-
+        If the comment was detected as spam, or if the parent comment is not
+        attached to the same node as the new comment
+    '404':
+      description: If a parent ID was passed in that cannot be found
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/commit_comment.yaml
+    description: The specified comment.
+    required: true
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: commit
+    in: path
+    description: The commit's SHA1.
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

@@ -1,0 +1,94 @@
+delete:
+  tags:
+    - Snippets
+  description: |-
+    Used to stop watching a specific snippet. Returns 204 (No Content)
+    to indicate success.
+  summary: Stop watching a snippet
+  responses:
+    '204':
+      description: Indicates the user stopped watching the snippet successfully.
+    '401':
+      description: If the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the snippet does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - snippet:write
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Snippets
+  description: |-
+    Used to check if the current user is watching a specific snippet.
+
+    Returns 204 (No Content) if the user is watching the snippet and 404 if
+    not.
+
+    Hitting this endpoint anonymously always returns a 404.
+  summary: Check if the current user is watching a snippet
+  responses:
+    '204':
+      description: If the authenticated user is watching the snippet.
+    '404':
+      description: >-
+        If the snippet does not exist, or if the authenticated user is not
+        watching the snippet.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - snippet
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Snippets
+  description: Used to start watching a specific snippet. Returns 204 (No Content).
+  summary: Watch a snippet
+  responses:
+    '204':
+      description: Indicates the authenticated user is now watching the snippet.
+    '401':
+      description: If the request was not authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the snippet does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - snippet:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: encoded_id
+    in: path
+    description: The snippet id.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

@@ -1,0 +1,26 @@
+get:
+  tags:
+    - Pipelines
+  summary: Get keys for OIDC in Pipelines
+  description: >-
+    This is part of OpenID Connect for Pipelines, see
+    https://support.atlassian.com/bitbucket-cloud/docs/integrate-pipelines-with-resource-servers-using-oidc/
+  operationId: getOIDCKeys
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The keys in JSON web key format
+    '404':
+      description: The workspace was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

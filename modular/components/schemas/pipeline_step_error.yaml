@@ -1,0 +1,13 @@
+allOf:
+  - $ref: ./object.yaml
+  - additionalProperties: true
+    type: object
+    title: Pipeline Step Error
+    description: An error causing a step failure.
+    properties:
+      key:
+        type: string
+        description: The error key.
+      message:
+        type: string
+        description: The error message.

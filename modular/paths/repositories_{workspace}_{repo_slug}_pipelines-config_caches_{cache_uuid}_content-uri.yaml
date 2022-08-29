@@ -1,0 +1,38 @@
+get:
+  tags:
+    - Pipelines
+  summary: Get cache content URI
+  description: Retrieve the URI of the content of the specified cache.
+  operationId: getRepositoryPipelineCacheContentURI
+  parameters:
+    - name: workspace
+      description: The account.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: cache_uuid
+      description: The UUID of the cache.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The cache content uri.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_cache_content_uri.yaml
+    '404':
+      description: The workspace, repository or cache_uuid with given UUID was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

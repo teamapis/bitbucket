@@ -1,0 +1,48 @@
+get:
+  tags:
+    - Issue tracker
+  description: Returns the specified issue tracker milestone object.
+  summary: Get a milestone
+  responses:
+    '200':
+      description: The specified milestone object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/milestone.yaml
+    '404':
+      description: >-
+        The specified repository or milestone does not exist or does not have
+        the issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue
+    - basic: []
+    - api_key: []
+parameters:
+  - name: milestone_id
+    in: path
+    description: The milestone's id
+    required: true
+    schema:
+      type: integer
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

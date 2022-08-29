@@ -1,0 +1,51 @@
+get:
+  tags:
+    - Webhooks
+  description: |-
+    Returns the webhook resource or subject types on which webhooks can
+    be registered.
+
+    Each resource/subject type contains an `events` link that returns the
+    paginated list of specific events each individual subject type can
+    emit.
+
+    This endpoint is publicly accessible and does not require
+    authentication or scopes.
+
+    Example:
+
+    ```
+    $ curl https://api.bitbucket.org/2.0/hook_events
+
+    {
+        "repository": {
+            "links": {
+                "events": {
+                    "href": "https://api.bitbucket.org/2.0/hook_events/repository"
+                }
+            }
+        },
+        "workspace": {
+            "links": {
+                "events": {
+                    "href": "https://api.bitbucket.org/2.0/hook_events/workspace"
+                }
+            }
+        }
+    }
+    ```
+  summary: Get a webhook resource
+  responses:
+    '200':
+      description: >-
+        A mapping of resource/subject types pointing to their individual event
+        types.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/subject_types.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+parameters: []

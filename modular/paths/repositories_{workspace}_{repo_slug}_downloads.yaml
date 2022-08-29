@@ -1,0 +1,79 @@
+get:
+  tags:
+    - Downloads
+  description: Returns a list of download links associated with the repository.
+  summary: List download artifacts
+  responses:
+    '200':
+      description: >-
+        Returns a paginated list of the downloads associated with the
+        repository.
+    '403':
+      description: User is not authorized to read from the repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Downloads
+  description: |-
+    Upload new download artifacts.
+
+    To upload files, perform a `multipart/form-data` POST containing one
+    or more `files` fields:
+
+        $ echo Hello World > hello.txt
+        $ curl -s -u evzijst -X POST https://api.bitbucket.org/2.0/repositories/evzijst/git-tests/downloads -F files=@hello.txt
+
+    When a file is uploaded with the same name as an existing artifact,
+    then the existing file will be replaced.
+  summary: Upload a download artifact
+  responses:
+    '201':
+      description: The artifact was uploaded sucessfully.
+    '400':
+      description: Bad Request.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: User is not authorized to write to the repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '406':
+      description: Unsupported Content-Type. Use multiplart/form-data.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

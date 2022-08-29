@@ -1,0 +1,36 @@
+post:
+  tags:
+    - Deployments
+  description: Update an environment
+  summary: Update an environment
+  operationId: updateEnvironmentForRepository
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: environment_uuid
+      description: The environment UUID.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '202':
+      description: The environment update request was accepted.
+    '404':
+      description: No account, repository or environment with the UUID provided exists.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

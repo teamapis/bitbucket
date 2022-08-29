@@ -1,0 +1,26 @@
+get:
+  tags:
+    - Pipelines
+  summary: Get OpenID configuration for OIDC in Pipelines
+  description: >-
+    This is part of OpenID Connect for Pipelines, see
+    https://support.atlassian.com/bitbucket-cloud/docs/integrate-pipelines-with-resource-servers-using-oidc/
+  operationId: getOIDCConfiguration
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The OpenID configuration
+    '404':
+      description: The workspace was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

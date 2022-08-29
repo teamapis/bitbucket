@@ -1,0 +1,44 @@
+get:
+  tags:
+    - Snippets
+  description: Returns the changes (commits) made on this snippet.
+  summary: List snippet changes
+  responses:
+    '200':
+      description: The paginated list of snippet commits.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_snippet_commit.yaml
+    '403':
+      description: If the authenticated user does not have access to the snippet.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the snippet does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - snippet
+    - basic: []
+    - api_key: []
+parameters:
+  - name: encoded_id
+    in: path
+    description: The snippet id.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

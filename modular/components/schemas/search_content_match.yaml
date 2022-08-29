@@ -1,0 +1,7 @@
+type: object
+properties:
+  lines:
+    type: array
+    readOnly: true
+    items:
+      $ref: ./search_line.yaml

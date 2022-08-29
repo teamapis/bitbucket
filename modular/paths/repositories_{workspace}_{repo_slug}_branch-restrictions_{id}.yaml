@@ -1,0 +1,140 @@
+delete:
+  tags:
+    - Branch restrictions
+  description: Deletes an existing branch restriction rule.
+  summary: Delete a branch restriction rule
+  responses:
+    '204':
+      description: ''
+    '401':
+      description: If the request was not authenticated
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: If the authenticated user does not have admin access to the repository
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the repository or branch restriction id does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Branch restrictions
+  description: Returns a specific branch restriction rule.
+  summary: Get a branch restriction rule
+  responses:
+    '200':
+      description: The branch restriction rule
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/branchrestriction.yaml
+    '401':
+      description: If the request was not authenticated
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: If the authenticated user does not have admin access to the repository
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the repository or branch restriction id does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+put:
+  tags:
+    - Branch restrictions
+  description: >-
+    Updates an existing branch restriction rule.
+
+
+    Fields not present in the request body are ignored.
+
+
+    See
+    [`POST`](/cloud/bitbucket/rest/api-group-branch-restrictions/#api-repositories-workspace-repo-slug-branch-restrictions-post)
+    for details.
+  summary: Update a branch restriction rule
+  responses:
+    '200':
+      description: The updated branch restriction rule
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/branchrestriction.yaml
+    '401':
+      description: If the request was not authenticated
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: If the authenticated user does not have admin access to the repository
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: If the repository or branch restriction id does not exist
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/branchrestriction.yaml
+    description: The new version of the existing rule
+    required: true
+  security:
+    - oauth2:
+        - repository:admin
+    - basic: []
+    - api_key: []
+parameters:
+  - name: id
+    in: path
+    description: The restriction rule's id
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

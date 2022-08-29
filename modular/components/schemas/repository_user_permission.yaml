@@ -1,0 +1,35 @@
+type: object
+title: Repository User Permission
+description: A user's direct permission for a given repository.
+properties:
+  type:
+    type: string
+  permission:
+    type: string
+    enum:
+      - admin
+      - write
+      - read
+      - none
+  user:
+    $ref: ./user.yaml
+  repository:
+    $ref: ./repository.yaml
+  links:
+    type: object
+    properties:
+      self:
+        type: object
+        title: Link
+        description: A link to a resource related to this object.
+        properties:
+          href:
+            type: string
+            format: uri
+          name:
+            type: string
+        additionalProperties: false
+    additionalProperties: false
+required:
+  - type
+additionalProperties: true

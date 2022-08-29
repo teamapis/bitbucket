@@ -1,0 +1,120 @@
+get:
+  tags:
+    - Workspaces
+  description: >-
+    Returns the list of members in a workspace
+
+    and their permission levels.
+
+    Permission can be:
+
+    * `owner`
+
+    * `collaborator`
+
+    * `member`
+
+
+    **The `collaborator` role is being removed from the Bitbucket Cloud API. For
+    more information,
+
+    see the [deprecation
+    announcement](/cloud/bitbucket/deprecation-notice-collaborator-role/).**
+
+
+    Example:
+
+
+    ```
+
+    $ curl -X https://api.bitbucket.org/2.0/workspaces/bbworkspace1/permissions
+
+
+    {
+        "pagelen": 10,
+        "values": [
+            {
+                "permission": "owner",
+                "type": "workspace_membership",
+                "user": {
+                    "type": "user",
+                    "uuid": "{470c176d-3574-44ea-bb41-89e8638bcca4}",
+                    "display_name": "Erik van Zijst",
+                },
+                "workspace": {
+                    "type": "workspace",
+                    "uuid": "{a15fb181-db1f-48f7-b41f-e1eff06929d6}",
+                    "slug": "bbworkspace1",
+                    "name": "Atlassian Bitbucket",
+                }
+            },
+            {
+                "permission": "member",
+                "type": "workspace_membership",
+                "user": {
+                    "type": "user",
+                    "nickname": "seanaty",
+                    "display_name": "Sean Conaty",
+                    "uuid": "{504c3b62-8120-4f0c-a7bc-87800b9d6f70}"
+                },
+                "workspace": {
+                    "type": "workspace",
+                    "uuid": "{a15fb181-db1f-48f7-b41f-e1eff06929d6}",
+                    "slug": "bbworkspace1",
+                    "name": "Atlassian Bitbucket",
+                }
+            }
+        ],
+        "page": 1,
+        "size": 2
+    }
+
+    ```
+
+
+    Results may be further [filtered](/cloud/bitbucket/rest/intro/#filtering) by
+
+    permission by adding the following query string parameters:
+
+
+    * `q=permission="owner"`
+  summary: List user permissions in a workspace
+  responses:
+    '200':
+      description: >-
+        The list of users that are part of a workspace, along with their
+        permission.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_workspace_memberships.yaml
+    '401':
+      description: The request wasn't authenticated.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: q
+      in: query
+      description: |-
+
+        Query string to narrow down the response as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      required: false
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - account
+    - basic: []
+    - api_key: []
+parameters:
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

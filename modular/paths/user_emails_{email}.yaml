@@ -1,0 +1,29 @@
+get:
+  tags:
+    - Users
+  description: |-
+    Returns details about a specific one of the authenticated user's
+    email addresses.
+
+    Details describe whether the address has been confirmed by the user and
+    whether it is the user's primary address or not.
+  summary: Get an email address for current user
+  responses:
+    default:
+      description: Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - email
+    - basic: []
+    - api_key: []
+parameters:
+  - name: email
+    in: path
+    description: Email address of the user.
+    required: true
+    schema:
+      type: string

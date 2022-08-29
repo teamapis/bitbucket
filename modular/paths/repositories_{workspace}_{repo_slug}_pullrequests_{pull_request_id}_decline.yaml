@@ -1,0 +1,48 @@
+post:
+  tags:
+    - Pullrequests
+  description: Declines the pull request.
+  summary: Decline a pull request
+  responses:
+    '200':
+      description: The pull request was successfully declined.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pullrequest.yaml
+    '555':
+      description: |-
+        If the decline took too long and timed out.
+        In this case the caller should retry the request later.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - pullrequest:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: pull_request_id
+    in: path
+    description: The id of the pull request.
+    required: true
+    schema:
+      type: integer
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

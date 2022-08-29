@@ -1,0 +1,87 @@
+post:
+  tags:
+    - Pipelines
+  summary: Create a schedule
+  description: Create a schedule for the given repository.
+  operationId: createRepositoryPipelineSchedule
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/pipeline_schedule.yaml
+    description: The schedule to create.
+    required: true
+  responses:
+    '201':
+      description: The created schedule.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_schedule.yaml
+    '400':
+      description: There were errors validating the request.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '401':
+      description: The maximum limit of schedules for this repository was reached.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The account or repository was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+get:
+  tags:
+    - Pipelines
+  summary: List schedules
+  description: Retrieve the configured schedules for the given repository.
+  operationId: getRepositoryPipelineSchedules
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The list of schedules.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_pipeline_schedules.yaml
+    '404':
+      description: The account or repository was not found.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

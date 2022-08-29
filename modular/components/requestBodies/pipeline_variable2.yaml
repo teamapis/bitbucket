@@ -1,0 +1,5 @@
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/pipeline_variable.yaml
+description: The variable to create.

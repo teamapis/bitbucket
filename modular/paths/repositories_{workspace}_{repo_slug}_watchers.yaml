@@ -1,0 +1,36 @@
+get:
+  tags:
+    - Repositories
+  description: |-
+    Returns a paginated list of all the watchers on the specified
+    repository.
+  summary: List repositories watchers
+  responses:
+    '200':
+      description: A paginated list of all the watchers on the specified repository.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_accounts.yaml
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

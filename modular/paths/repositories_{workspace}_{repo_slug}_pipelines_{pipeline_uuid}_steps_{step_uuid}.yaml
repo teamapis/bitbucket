@@ -1,0 +1,48 @@
+get:
+  tags:
+    - Pipelines
+  summary: Get a step of a pipeline
+  description: Retrieve a given step of a pipeline.
+  operationId: getPipelineStepForRepository
+  parameters:
+    - name: workspace
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces, for example `{workspace UUID}`.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: repo_slug
+      description: The repository.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: pipeline_uuid
+      description: The UUID of the pipeline.
+      required: true
+      in: path
+      schema:
+        type: string
+    - name: step_uuid
+      description: The UUID of the step.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The step.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_step.yaml
+    '404':
+      description: >-
+        No account, repository, pipeline or step with the UUID provided exists
+        for the pipeline with the UUID provided.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

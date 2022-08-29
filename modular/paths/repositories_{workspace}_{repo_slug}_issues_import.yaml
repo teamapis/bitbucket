@@ -1,0 +1,178 @@
+get:
+  tags:
+    - Issue tracker
+  description: >-
+    When using GET, this endpoint reports the status of the current import task.
+    Request example:
+
+
+    ```
+
+    $ curl -u <username> -X GET
+    https://api.bitbucket.org/2.0/repositories/<owner_username>/<repo_slug>/issues/import
+
+    ```
+
+
+    After the job has been scheduled, but before it starts executing, this
+    endpoint's response is:
+
+
+    ```
+
+    < HTTP/1.1 202 Accepted
+
+    {
+        "type": "issue_job_status",
+        "status": "PENDING",
+        "phase": "Attachments",
+        "total": 15,
+        "count": 0,
+        "percent": 0
+    }
+
+    ```
+
+
+    Once it starts running, it is a 202 response with status STARTED and
+    progress filled.
+
+
+    After it is finished, it becomes a 200 response with status SUCCESS or
+    FAILURE.
+  summary: Check issue import status
+  responses:
+    '200':
+      description: Import job complete with either FAILURE or SUCCESS status
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/issue_job_status.yaml
+    '202':
+      description: Import job started
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/issue_job_status.yaml
+    '401':
+      description: The request wasn't authenticated properly
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: When the authenticated user does not have admin permission on the repo
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: No export job has begun
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue:write
+        - repository:admin
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Issue tracker
+  description: >-
+    A POST request to this endpoint will import the zip file given by the
+    archive parameter into the repository. All
+
+    existing issues will be deleted and replaced by the contents of the imported
+    zip file.
+
+
+    Imports are done through a multipart/form-data POST. There is one valid and
+    required form field, with the name
+
+    "archive," which needs to be a file field:
+
+
+    ```
+
+    $ curl -u <username> -X POST -F archive=@/path/to/file.zip
+    https://api.bitbucket.org/2.0/repositories/<owner_username>/<repo_slug>/issues/import
+
+    ```
+
+
+    When the import job is accepted, here is example output:
+
+
+    ```
+
+    < HTTP/1.1 202 Accepted
+
+
+    {
+        "type": "issue_job_status",
+        "status": "ACCEPTED",
+        "phase": "Attachments",
+        "total": 15,
+        "count": 0,
+        "percent": 0
+    }
+
+    ```
+  summary: Import issues
+  responses:
+    '202':
+      description: Import job accepted
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/issue_job_status.yaml
+    '401':
+      description: The request wasn't authenticated properly
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '403':
+      description: When the authenticated user does not have admin permission on the repo
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: No export job has begun
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '409':
+      description: Import already running
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue:write
+        - repository:admin
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

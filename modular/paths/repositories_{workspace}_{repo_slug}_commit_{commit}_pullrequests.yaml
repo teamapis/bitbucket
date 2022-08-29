@@ -1,0 +1,68 @@
+get:
+  tags:
+    - Pullrequests
+  summary: List pull requests that contain a commit
+  description: >-
+    Returns a paginated list of all pull requests as part of which this commit
+    was reviewed. Pull Request Commit Links app must be installed first before
+    using this API; installation automatically occurs when 'Go to pull request'
+    is clicked from the web interface for a commit's details.
+  operationId: getPullrequestsForCommit
+  parameters:
+    - name: workspace
+      in: path
+      description: >-
+        This can either be the workspace ID (slug) or the workspace UUID
+        surrounded by curly-braces
+      required: true
+      schema:
+        type: string
+    - name: repo_slug
+      in: path
+      description: The repository; either the UUID in curly braces, or the slug
+      required: true
+      schema:
+        type: string
+    - name: commit
+      in: path
+      description: The SHA1 of the commit
+      required: true
+      schema:
+        type: string
+    - name: page
+      in: query
+      description: Which page to retrieve
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 1
+    - name: pagelen
+      in: query
+      description: How many pull requests to retrieve per page
+      required: false
+      schema:
+        type: integer
+        format: int32
+        default: 30
+  responses:
+    '200':
+      description: The paginated list of pull requests.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_pullrequests.yaml
+    '202':
+      description: The repository's pull requests are still being indexed.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_pullrequests.yaml
+    '404':
+      description: >-
+        Either the repository does not exist, or pull request commit links have
+        not yet been indexed.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

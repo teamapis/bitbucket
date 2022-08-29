@@ -1,0 +1,75 @@
+get:
+  tags:
+    - Pipelines
+  deprecated: true
+  summary: List variables for a user
+  description: >-
+    Find user level variables.
+
+    This endpoint has been deprecated, and you should use the new workspaces
+    endpoint. For more information, see [the
+    announcement](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/).
+  operationId: getPipelineVariablesForUser
+  parameters:
+    - name: selected_user
+      description: >-
+        Either the UUID of the account surrounded by curly-braces, for example
+        `{account UUID}`, OR an Atlassian Account ID.
+      required: true
+      in: path
+      schema:
+        type: string
+  responses:
+    '200':
+      description: The found user level variables.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_pipeline_variables.yaml
+post:
+  tags:
+    - Pipelines
+  deprecated: true
+  summary: Create a variable for a user
+  description: >-
+    Create a user level variable.
+
+    This endpoint has been deprecated, and you should use the new workspaces
+    endpoint. For more information, see [the
+    announcement](https://developer.atlassian.com/cloud/bitbucket/bitbucket-api-teams-deprecation/).
+  operationId: createPipelineVariableForUser
+  parameters:
+    - name: selected_user
+      description: >-
+        Either the UUID of the account surrounded by curly-braces, for example
+        `{account UUID}`, OR an Atlassian Account ID.
+      required: true
+      in: path
+      schema:
+        type: string
+  requestBody:
+    $ref: ../components/requestBodies/pipeline_variable2.yaml
+  responses:
+    '201':
+      description: The created variable.
+      headers:
+        Location:
+          description: The URL of the newly created pipeline variable.
+          schema:
+            type: string
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/pipeline_variable.yaml
+    '404':
+      description: The account does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '409':
+      description: A variable with the provided key already exists.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml

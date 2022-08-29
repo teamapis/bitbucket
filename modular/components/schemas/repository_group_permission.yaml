@@ -1,0 +1,35 @@
+type: object
+title: Repository Group Permission
+description: A group's permission for a given repository.
+properties:
+  type:
+    type: string
+  links:
+    type: object
+    properties:
+      self:
+        type: object
+        title: Link
+        description: A link to a resource related to this object.
+        properties:
+          href:
+            type: string
+            format: uri
+          name:
+            type: string
+        additionalProperties: false
+    additionalProperties: false
+  permission:
+    type: string
+    enum:
+      - admin
+      - write
+      - read
+      - none
+  group:
+    $ref: ./group.yaml
+  repository:
+    $ref: ./repository.yaml
+required:
+  - type
+additionalProperties: true

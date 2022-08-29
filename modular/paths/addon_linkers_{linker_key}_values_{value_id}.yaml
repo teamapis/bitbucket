@@ -1,0 +1,67 @@
+delete:
+  tags:
+    - Addon
+  description: |-
+    Delete a single [linker](/cloud/bitbucket/modules/linker/) value
+    of the authenticated application.
+  summary: Delete a linker value
+  responses:
+    '204':
+      description: Successfully deleted the linker value.
+    '401':
+      description: Authentication must use app JWT
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The linker value does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Addon
+  description: |-
+    Get a single [linker](/cloud/bitbucket/modules/linker/) value
+    of the authenticated application.
+  summary: Get a linker value
+  responses:
+    '200':
+      description: Successful.
+    '401':
+      description: Authentication must use app JWT
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The linker value does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2: []
+    - basic: []
+    - api_key: []
+parameters:
+  - name: linker_key
+    in: path
+    description: |-
+      The unique key of a [linker module](/cloud/bitbucket/modules/linker/)
+      as defined in an application descriptor.
+    required: true
+    schema:
+      type: string
+  - name: value_id
+    in: path
+    description: The numeric ID of the linker value.
+    required: true
+    schema:
+      type: integer

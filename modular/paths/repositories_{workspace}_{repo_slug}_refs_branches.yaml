@@ -1,0 +1,286 @@
+get:
+  tags:
+    - Refs
+  description: |-
+    Returns a list of all open branches within the specified repository.
+            Results will be in the order the source control manager returns them.
+
+            ```
+            $ curl -s https://api.bitbucket.org/2.0/repositories/atlassian/aui/refs/branches?pagelen=1 | jq .
+            {
+              "pagelen": 1,
+              "size": 187,
+              "values": [
+                {
+                  "name": "issue-9.3/AUI-5343-assistive-class",
+                  "links": {
+                    "commits": {
+                      "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/commits/issue-9.3/AUI-5343-assistive-class"
+                    },
+                    "self": {
+                      "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/refs/branches/issue-9.3/AUI-5343-assistive-class"
+                    },
+                    "html": {
+                      "href": "https://bitbucket.org/atlassian/aui/branch/issue-9.3/AUI-5343-assistive-class"
+                    }
+                  },
+                  "default_merge_strategy": "squash",
+                  "merge_strategies": [
+                    "merge_commit",
+                    "squash",
+                    "fast_forward"
+                  ],
+                  "type": "branch",
+                  "target": {
+                    "hash": "e5d1cde9069fcb9f0af90403a4de2150c125a148",
+                    "repository": {
+                      "links": {
+                        "self": {
+                          "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui"
+                        },
+                        "html": {
+                          "href": "https://bitbucket.org/atlassian/aui"
+                        },
+                        "avatar": {
+                          "href": "https://bytebucket.org/ravatar/%7B585074de-7b60-4fd1-81ed-e0bc7fafbda5%7D?ts=86317"
+                        }
+                      },
+                      "type": "repository",
+                      "name": "aui",
+                      "full_name": "atlassian/aui",
+                      "uuid": "{585074de-7b60-4fd1-81ed-e0bc7fafbda5}"
+                    },
+                    "links": {
+                      "self": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/commit/e5d1cde9069fcb9f0af90403a4de2150c125a148"
+                      },
+                      "comments": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/commit/e5d1cde9069fcb9f0af90403a4de2150c125a148/comments"
+                      },
+                      "patch": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/patch/e5d1cde9069fcb9f0af90403a4de2150c125a148"
+                      },
+                      "html": {
+                        "href": "https://bitbucket.org/atlassian/aui/commits/e5d1cde9069fcb9f0af90403a4de2150c125a148"
+                      },
+                      "diff": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/diff/e5d1cde9069fcb9f0af90403a4de2150c125a148"
+                      },
+                      "approve": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/commit/e5d1cde9069fcb9f0af90403a4de2150c125a148/approve"
+                      },
+                      "statuses": {
+                        "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/commit/e5d1cde9069fcb9f0af90403a4de2150c125a148/statuses"
+                      }
+                    },
+                    "author": {
+                      "raw": "Marcin Konopka <mkonopka@atlassian.com>",
+                      "type": "author",
+                      "user": {
+                        "display_name": "Marcin Konopka",
+                        "uuid": "{47cc24f4-2a05-4420-88fe-0417535a110a}",
+                        "links": {
+                          "self": {
+                            "href": "https://api.bitbucket.org/2.0/users/%7B47cc24f4-2a05-4420-88fe-0417535a110a%7D"
+                          },
+                          "html": {
+                            "href": "https://bitbucket.org/%7B47cc24f4-2a05-4420-88fe-0417535a110a%7D/"
+                          },
+                          "avatar": {
+                            "href": "https://avatar-management--avatars.us-west-2.prod.public.atl-paas.net/initials/MK-1.png"
+                          }
+                        },
+                        "nickname": "Marcin Konopka",
+                        "type": "user",
+                        "account_id": "60113d2b47a9540069f4de03"
+                      }
+                    },
+                    "parents": [
+                      {
+                        "hash": "87f7fc92b00464ae47b13ef65c91884e4ac9be51",
+                        "type": "commit",
+                        "links": {
+                          "self": {
+                            "href": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/commit/87f7fc92b00464ae47b13ef65c91884e4ac9be51"
+                          },
+                          "html": {
+                            "href": "https://bitbucket.org/atlassian/aui/commits/87f7fc92b00464ae47b13ef65c91884e4ac9be51"
+                          }
+                        }
+                      }
+                    ],
+                    "date": "2021-04-13T13:44:49+00:00",
+                    "message": "wip
+    ",
+                    "type": "commit"
+                  }
+                }
+              ],
+              "page": 1,
+              "next": "https://api.bitbucket.org/2.0/repositories/atlassian/aui/refs/branches?pagelen=1&page=2"
+            }
+            ```
+
+            Branches support [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering)
+            that can be used to search for specific branches. For instance, to find
+            all branches that have "stab" in their name:
+
+            ```
+            curl -s https://api.bitbucket.org/2.0/repositories/atlassian/aui/refs/branches -G --data-urlencode 'q=name ~ "stab"'
+            ```
+
+            By default, results will be in the order the underlying source control system returns them and identical to
+            the ordering one sees when running "$ git branch --list". Note that this follows simple
+            lexical ordering of the ref names.
+
+            This can be undesirable as it does apply any natural sorting semantics, meaning for instance that tags are
+            sorted ["v10", "v11", "v9"] instead of ["v9", "v10", "v11"].
+
+            Sorting can be changed using the ?q= query parameter. When using ?q=name to explicitly sort on ref name,
+            Bitbucket will apply natural sorting and interpret numerical values as numbers instead of strings.
+  summary: List open branches
+  responses:
+    '200':
+      description: >-
+        A paginated list of branches matching any filter criteria that were
+        provided.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/paginated_branches.yaml
+    '403':
+      description: |
+        If the repository is private and the authenticated user does not have
+        access to it.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The specified repository does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  parameters:
+    - name: q
+      in: query
+      description: |-
+
+        Query string to narrow down the response as per
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering).
+      schema:
+        type: string
+    - name: sort
+      in: query
+      description: >-
+
+        Field by which the results should be sorted as per
+
+        [filtering and sorting](/cloud/bitbucket/rest/intro/#filtering). The
+        `name`
+
+        field is handled specially for branches in that, if specified as the
+        sort field, it
+
+        uses a natural sort order instead of the default lexicographical sort
+        order. For example,
+
+        it will return ['branch1', 'branch2', 'branch10'] instead of ['branch1',
+        'branch10', 'branch2'].
+      schema:
+        type: string
+  security:
+    - oauth2:
+        - repository
+    - basic: []
+    - api_key: []
+post:
+  tags:
+    - Refs
+  description: >-
+    Creates a new branch in the specified repository.
+
+
+    The payload of the POST should consist of a JSON document that
+
+    contains the name of the tag and the target hash.
+
+
+    ```
+
+    curl https://api.bitbucket.org/2.0/repositories/seanfarley/hg/refs/branches
+    \
+
+    -s -u seanfarley -X POST -H "Content-Type: application/json" \
+
+    -d '{
+        "name" : "smf/create-feature",
+        "target" : {
+            "hash" : "default",
+        }
+    }'
+
+    ```
+
+
+    This call requires authentication. Private repositories require the
+
+    caller to authenticate with an account that has appropriate
+
+    authorization.
+
+
+    The branch name should not include any prefixes (e.g.
+
+    refs/heads). This endpoint does support using short hash prefixes for
+
+    the commit hash, but it may return a 400 response if the provided
+
+    prefix is ambiguous. Using a full commit hash is the preferred
+
+    approach.
+  summary: Create a branch
+  responses:
+    '201':
+      description: The newly created branch object.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/branch.yaml
+    '403':
+      description: |
+        If the repository is private and the authenticated user does not have
+        access to it.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+    '404':
+      description: The specified repository or branch does not exist.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - repository:write
+    - basic: []
+    - api_key: []
+parameters:
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string

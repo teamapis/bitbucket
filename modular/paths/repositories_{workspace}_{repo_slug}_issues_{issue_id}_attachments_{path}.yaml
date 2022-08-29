@@ -1,0 +1,87 @@
+delete:
+  tags:
+    - Issue tracker
+  description: Deletes an attachment.
+  summary: Delete an attachment for an issue
+  responses:
+    '204':
+      description: Indicates that the deletion was successful
+    '401':
+      description: If the issue tracker is private and the request was not authenticated.
+    '404':
+      description: >-
+        The specified repository or issue does not exist or does not have the
+        issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue:write
+    - basic: []
+    - api_key: []
+get:
+  tags:
+    - Issue tracker
+  description: |-
+    Returns the contents of the specified file attachment.
+
+    Note that this endpoint does not return a JSON response, but instead
+    returns a redirect pointing to the actual file that in turn will return
+    the raw contents.
+
+    The redirect URL contains a one-time token that has a limited lifetime.
+    As a result, the link should not be persisted, stored, or shared.
+  summary: Get attachment for an issue
+  responses:
+    '302':
+      description: A redirect to the file's contents
+      headers:
+        Location:
+          schema:
+            type: string
+    '401':
+      description: If the issue tracker is private and the request was not authenticated.
+    '404':
+      description: >-
+        The specified repository or issue does not exist or does not have the
+        issue tracker enabled.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/error.yaml
+  security:
+    - oauth2:
+        - issue
+    - basic: []
+    - api_key: []
+parameters:
+  - name: issue_id
+    in: path
+    description: The issue id
+    required: true
+    schema:
+      type: string
+  - name: path
+    in: path
+    description: Path to the file.
+    required: true
+    schema:
+      type: string
+  - name: repo_slug
+    in: path
+    description: |
+      This can either be the repository slug or the UUID of the repository,
+      surrounded by curly-braces, for example: `{repository UUID}`.
+    required: true
+    schema:
+      type: string
+  - name: workspace
+    in: path
+    description: |
+      This can either be the workspace ID (slug) or the workspace UUID
+      surrounded by curly-braces, for example: `{workspace UUID}`.
+    required: true
+    schema:
+      type: string
